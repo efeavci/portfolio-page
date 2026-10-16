@@ -3,85 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Das Web-Engineering-Portfolio von Efe Avci: Projekte, Lernschwerpunkte und interaktive Einblicke in HTML, CSS und JavaScript.">
-  <meta name="theme-color" content="#182a24">
-  <title>Efe Avci — Portfolio</title>
+  <meta name="description" content="Efe Avci – Portfolio und Projekte aus dem Web Engineering.">
+  <title>Efe Avci | Portfolio</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <a class="skip-link" href="#inhalt">Zum Inhalt</a>
-  <header class="site-header wrap">
-    <a class="wordmark" href="#start" aria-label="Efe Avci, Startseite">EA<span>↗</span></a>
+  <header>
+    <a class="name" href="#start">Efe Avci</a>
     <nav aria-label="Hauptnavigation">
-      <ul class="navigation">
+      <ul>
         <li><a href="#ueber-mich">Über mich</a></li>
         <li><a href="#projekte">Projekte</a></li>
-        <li><a href="#kenntnisse">Lernschwerpunkte</a></li>
-        <li><a href="#kontakt">Kontakt ↗</a></li>
+        <li><a href="#kenntnisse">Kenntnisse</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
       </ul>
     </nav>
   </header>
+
   <main id="inhalt">
-    <section class="hero wrap" id="start" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="dot"></span> Mein Web-Engineering-Portfolio</p>
-        <h1 id="hero-title">Efe Avci.<br><span>Vom Lernen<br>zum Machen.</span></h1>
-        <p class="intro">Hier zeige ich meine ersten Schritte im Web Engineering — von einer einfachen Idee bis zur interaktiven Webseite.</p>
-        <a class="button" href="#projekte">Meine Projekte entdecken <span aria-hidden="true">↘</span></a>
-      </div>
-      <div class="hero-art" aria-hidden="true">
-        <span class="art-label">IN ENTWICKLUNG · 2026</span>
-        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
-        <span class="monogram">ea.</span>
-        <div class="art-bottom"><span>STRUKTUR<br>GESTALTUNG<br>INTERAKTION</span><span class="asterisk">✳</span></div>
-      </div>
-      <div class="hero-foot"><span>HTML / CSS / JAVASCRIPT</span><span>Neugierig bleiben. Weiterbauen.</span></div>
+    <section class="intro" id="start">
+      <p class="muted">Portfolio · Web Engineering</p>
+      <h1>Hallo, ich bin Efe.</h1>
+      <p>Hier sammle ich meine Projekte und Übungen aus dem Web Engineering.</p>
     </section>
 
-    <section class="about section wrap" id="ueber-mich" aria-labelledby="about-title">
-      <p class="section-number">01 / ÜBER MICH</p>
-      <div><h2 id="about-title">Ein Portfolio,<br>das mit mir wächst.</h2>
-        <p class="large-copy">Ich bin Efe. In diesem Portfolio dokumentiere ich meine Arbeit im Web Engineering und mache meinen Lernfortschritt sichtbar.</p>
-        <p>Mein aktueller Fokus liegt auf dem Zusammenspiel von HTML, CSS und JavaScript: Inhalte sinnvoll strukturieren, für verschiedene Bildschirmgrössen gestalten und auf Nutzereingaben reagieren.</p>
-        <p class="editor-note">Persönliches Profil folgt: Hier ergänze ich meinen Hintergrund, meine Interessen und meine Ziele.</p>
-      </div>
+    <section id="ueber-mich">
+      <h2>Über mich</h2>
+      <p>Ich lerne, Webseiten mit HTML, CSS und JavaScript zu erstellen. Diese Seite gehört dazu. Sie wird nach und nach um weitere Arbeiten ergänzt.</p>
     </section>
 
-    <section class="section projects-section" id="projekte" aria-labelledby="projects-title">
-      <div class="wrap">
-        <div class="section-heading"><div><p class="section-number">02 / PROJEKTE</p><h2 id="projects-title">Ausprobiert.<br>Selbst gebaut.</h2></div><p>Zwei Einblicke in meine<br>Arbeit mit dem Web.</p></div>
-        <div class="project-grid">
-          <article class="project-card">
-            <div class="project-visual visual-web" aria-hidden="true"><span class="mini-window"><span class="window-dots">● ● ●</span><strong>Hello,<br>World<span>!</span></strong><span class="mock-button">Klick mich ↗</span></span><span class="visual-number">01</span></div>
-            <div class="project-body"><p class="eyebrow">GRUNDLAGEN · HTML / CSS / JS</p><h3>Der erste Klick</h3><p>Eine kleine Webseite, die Struktur, Gestaltung und Interaktion verbindet. Ein Button reagiert auf einen Klick mit einer Begrüssung.</p>
-              <div class="project-actions"><a href="https://github.com/efeavci/EWEB_Efe_Avci">Quellcode ansehen ↗</a><button class="text-button" id="myButton" type="button">Hello World testen</button></div>
-            </div>
-          </article>
-          <article class="project-card">
-            <div class="project-visual visual-portfolio" aria-hidden="true"><span class="poster"><small>EFE AVCI / PORTFOLIO</small><strong>Ideen.<br>Code.<br><em>Fortschritt.</em></strong><span>↗</span></span><span class="visual-number">02</span></div>
-            <div class="project-body"><p class="eyebrow">PORTFOLIO · RESPONSIVES DESIGN</p><h3>Mein Platz im Web</h3><p>Diese Seite bündelt meine Projekte und Lernschwerpunkte. Mit semantischem HTML, responsiver Navigation und kleinen JavaScript-Interaktionen.</p>
-              <div class="project-actions"><a href="https://github.com/efeavci/portfolio-page">Quellcode ansehen ↗</a><button class="text-button" id="toggleButton" type="button" aria-expanded="false" aria-controls="project-details">Details einblenden</button></div>
-              <div id="project-details" class="project-details" hidden><p>Die Navigation nutzt Flexbox und wechselt unter 600 Pixeln von einer Zeile zu einer Spalte. Dieser Button verändert über das DOM die Sichtbarkeit dieses Textes sowie seine eigene Beschriftung.</p></div>
-            </div>
-          </article>
+    <section id="projekte">
+      <h2>Projekte</h2>
+      <article>
+        <h3>Erste Webseite</h3>
+        <p>Eine Übung mit einer HTML-Seite, einer CSS-Datei und einem JavaScript-Button. Beim Klicken erscheint „Hello World“.</p>
+        <div class="actions">
+          <a href="https://github.com/efeavci/EWEB_Efe_Avci">Code auf GitHub</a>
+          <button id="myButton" type="button">Ausprobieren</button>
         </div>
-      </div>
+      </article>
+      <article>
+        <h3>Dieses Portfolio</h3>
+        <p>Eine einfache Übersicht meiner Arbeiten. Das Layout passt sich an die Bildschirmgrösse an.</p>
+        <div class="actions">
+          <a href="https://github.com/efeavci/portfolio-page">Code auf GitHub</a>
+          <button id="toggleButton" type="button" aria-expanded="false" aria-controls="project-details">Details einblenden</button>
+        </div>
+        <div id="project-details" hidden>
+          <p>Das Menü ist mit Flexbox aufgebaut. Unter 600 Pixeln stehen die Links untereinander. JavaScript blendet diesen Text ein und aus.</p>
+        </div>
+      </article>
     </section>
 
-    <section class="section wrap" id="kenntnisse" aria-labelledby="skills-title">
-      <div class="section-heading"><div><p class="section-number">03 / LERNSCHWERPUNKTE</p><h2 id="skills-title">Die Bausteine<br>hinter der Oberfläche.</h2></div><p>Was ich in meinen<br>Projekten anwende.</p></div>
-      <dl class="skills">
-        <div><dt><span>01</span> HTML</dt><dd>Semantische Seitenstruktur, Navigation und zugängliche Bedienelemente.</dd><dd class="skill-tag">Struktur</dd></div>
-        <div><dt><span>02</span> CSS</dt><dd>Typografie, Farben, Flexbox und Media Queries für kleine und grosse Bildschirme.</dd><dd class="skill-tag">Gestaltung</dd></div>
-        <div><dt><span>03</span> JavaScript</dt><dd>Events verarbeiten, das DOM verändern und Inhalte interaktiv machen.</dd><dd class="skill-tag">Interaktion</dd></div>
+    <section id="kenntnisse">
+      <h2>Was ich gerade lerne</h2>
+      <dl>
+        <div><dt>HTML</dt><dd>Seiten aufbauen, Texte und Links einfügen.</dd></div>
+        <div><dt>CSS</dt><dd>Abstände, Schrift und responsive Layouts gestalten.</dd></div>
+        <div><dt>JavaScript</dt><dd>Auf Klicks reagieren und Inhalte verändern.</dd></div>
       </dl>
     </section>
 
-    <section class="contact-section" id="kontakt" aria-labelledby="contact-title">
-      <div class="wrap contact-inner"><div><p class="section-number">04 / KONTAKT</p><h2 id="contact-title">Neugierig auf<br>meine nächsten Schritte?</h2><p>Meine Projekte und ihren aktuellen Stand findest du auf GitHub.</p></div><a class="button light-button" href="https://github.com/efeavci">Zu meinem GitHub <span aria-hidden="true">↗</span></a></div>
+    <section id="kontakt">
+      <h2>Kontakt</h2>
+      <p>Du findest mich auf <a href="https://github.com/efeavci">GitHub</a>.</p>
     </section>
   </main>
-  <footer class="wrap footer"><span>© <span id="year">2026</span> Efe Avci</span><span>Mit HTML, CSS & JavaScript gebaut.</span><a href="#start">Zurück nach oben ↑</a></footer>
+
+  <footer>
+    <span>© <span id="year">2026</span> Efe Avci</span>
+    <a href="#start">Nach oben</a>
+  </footer>
   <script src="script.js"></script>
 </body>
 </html>
