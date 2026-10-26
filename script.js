@@ -1,19 +1,27 @@
 "use strict";
 
-// Grundlagenübung: ein Klick löst einen Dialog aus.
-document.getElementById("myButton").addEventListener("click", function () {
-  alert("Hello World");
-});
+const year = document.getElementById("year");
+if (year) {
+  year.textContent = new Date().getFullYear();
+}
 
-// DOM-Übung: Sichtbarkeit, Beschriftung und ARIA-Zustand synchron halten.
-const toggleButton = document.getElementById("toggleButton");
-const projectDetails = document.getElementById("project-details");
+// Highlight the navigation item for the section currently in view.
+const sections = document.querySelectorAll("main section[id]");
+const links = document.querySelectorAll("nav a[href^='#']");
 
-toggleButton.addEventListener("click", function () {
-  projectDetails.hidden = !projectDetails.hidden;
-  const expanded = !projectDetails.hidden;
-  toggleButton.setAttribute("aria-expanded", String(expanded));
-  toggleButton.textContent = expanded ? "Details ausblenden" : "Details einblenden";
-});
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      links.forEach((link) => {
+        link.classList.toggle(
+          "active",
+          link.getAttribute("href") === `#${entry.target.id}`
+        );
+      });
+    });
+  },
+  { rootMargin: "-35% 0px -55% 0px" }
+);
 
-document.getElementById("year").textContent = new Date().getFullYear();
+sections.forEach((section) => observer.observe(section));
