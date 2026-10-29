@@ -1,21 +1,20 @@
 # Portfolio – Efe Avci
 
-Eine einfache Portfoliowebseite mit HTML, CSS und JavaScript.
+Persönliche Portfolio-Seite, gebaut mit Vue 3 und Vite.
 
-## Öffnen
-`index.html` im Browser öffnen. Es werden keine zusätzlichen Pakete benötigt.
+**Live:** https://efeavci.github.io/portfolio-page/
 
-## Inhalt
-- Über mich
-- Projekte mit Links zum Code
-- Aktuelle Lernschwerpunkte
-- GitHub-Kontakt
+## Entwicklung
 
-## Übungen
-Der erste Button öffnet „Hello World“. Der zweite blendet Projektdetails ein und aus. Die Navigation verwendet Flexbox und wird unter 600px vertikal.
+```bash
+npm install
+npm run dev      # Entwicklungsserver
+npm run build    # Produktions-Build nach dist/
+npm run preview  # gebauten Stand ansehen
+```
 
-## Noch offen
-Persönliche Angaben und weitere Projekte ergänzen. Vor der Abgabe mit der vollständigen Aufgabenstellung und den Bewertungskriterien abgleichen.
+## Aufbau
 
-## Prüfen
-Links, Tastaturbedienung und beide Buttons testen. Das Layout auf einem Smartphone und einem grösseren Bildschirm kontrollieren.
+- `src/components/` – eine Komponente pro Abschnitt
+- `assets/css/main.css` – Styles
+- `.github/workflows/deploy.yml` – automatisches Deployment auf GitHub Pages bei jedem Push auf `main`
