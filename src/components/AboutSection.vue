@@ -33,3 +33,33 @@ import profileImage from "../../assets/images/profile.webp";
     </div>
   </section>
 </template>
+
+<style scoped>
+@media (min-width: 901px) {
+  .about-card {
+    grid-template-columns: 360px 1fr;
+    min-height: 480px;
+  }
+
+  .about-photo {
+    min-height: 480px;
+  }
+}
+
+@media (max-width: 900px) {
+  .about-photo {
+    width: min(100%, 420px);
+    height: 440px;
+    margin: 32px auto 0;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-photo {
+    width: calc(100% - 40px);
+    height: 340px;
+    margin-top: 20px;
+  }
+}
+</style>
