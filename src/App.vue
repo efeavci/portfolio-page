@@ -60,7 +60,7 @@ onBeforeUnmount(() => {
 
   <header class="site-header">
     <div class="nav-shell">
-      <a class="brand" href="#top">EA<span>.</span></a>
+      <a class="brand" href="#top">Efe Avci<span>.</span></a>
 
       <nav id="main-menu" :class="{ open: menuOpen }" aria-label="Navigation">
         <a href="#work" @click="closeMenu">Projekte</a>
