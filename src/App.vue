@@ -1,58 +1,58 @@
 <script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import HeroSection from './components/HeroSection.vue'
-import ProjectsSection from './components/ProjectsSection.vue'
-import FocusSection from './components/FocusSection.vue'
-import AboutSection from './components/AboutSection.vue'
-import SkillsSection from './components/SkillsSection.vue'
-import JourneySection from './components/JourneySection.vue'
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import HeroSection from "./components/HeroSection.vue";
+import ProjectsSection from "./components/ProjectsSection.vue";
+import FocusSection from "./components/FocusSection.vue";
+import AboutSection from "./components/AboutSection.vue";
+import SkillsSection from "./components/SkillsSection.vue";
+import JourneySection from "./components/JourneySection.vue";
 
-const menuOpen = ref(false)
+const menuOpen = ref(false);
 const technologies = [
-  'Python',
-  'Django',
-  'JavaScript',
-  'HTML',
-  'CSS',
-  'Chart.js',
-  'MySQL',
-  'PostgreSQL',
-  'Linux',
-  'Azure',
-  'PowerShell',
-  'Git',
-]
+  "Python",
+  "Django",
+  "JavaScript",
+  "HTML",
+  "CSS",
+  "Chart.js",
+  "MySQL",
+  "PostgreSQL",
+  "Linux",
+  "Azure",
+  "PowerShell",
+  "Git",
+];
 
 const closeMenu = () => {
-  menuOpen.value = false
-}
+  menuOpen.value = false;
+};
 
 const handleKeydown = (event) => {
-  if (event.key === 'Escape') closeMenu()
-}
+  if (event.key === "Escape") closeMenu();
+};
 
-const desktopQuery = window.matchMedia('(min-width: 701px)')
+const desktopQuery = window.matchMedia("(min-width: 701px)");
 const handleResize = (event) => {
-  if (event.matches) closeMenu()
-}
+  if (event.matches) closeMenu();
+};
 
 watch(menuOpen, (open) => {
-  document.body.style.overflow = open ? 'hidden' : ''
+  document.body.style.overflow = open ? "hidden" : "";
 
   if (open) {
-    window.addEventListener('keydown', handleKeydown)
+    window.addEventListener("keydown", handleKeydown);
   } else {
-    window.removeEventListener('keydown', handleKeydown)
+    window.removeEventListener("keydown", handleKeydown);
   }
-})
+});
 
-onMounted(() => desktopQuery.addEventListener('change', handleResize))
+onMounted(() => desktopQuery.addEventListener("change", handleResize));
 
 onBeforeUnmount(() => {
-  document.body.style.overflow = ''
-  window.removeEventListener('keydown', handleKeydown)
-  desktopQuery.removeEventListener('change', handleResize)
-})
+  document.body.style.overflow = "";
+  window.removeEventListener("keydown", handleKeydown);
+  desktopQuery.removeEventListener("change", handleResize);
+});
 </script>
 
 <template>
@@ -96,7 +96,9 @@ onBeforeUnmount(() => {
           class="ticker-group"
           :aria-hidden="group === 2"
         >
-          <span v-for="tech in technologies" :key="`${group}-${tech}`">{{ tech }}</span>
+          <span v-for="tech in technologies" :key="`${group}-${tech}`">{{
+            tech
+          }}</span>
         </div>
       </div>
     </section>
@@ -118,17 +120,20 @@ onBeforeUnmount(() => {
       <p class="eyebrow">KONTAKT</p>
       <h2>Lass uns etwas entwickeln.</h2>
       <p>
-        Du möchtest mehr über mich oder meine Projekte erfahren? Ich freue mich auf deine
-        Nachricht.
+        Du möchtest mehr über mich oder meine Projekte erfahren? Ich freue mich
+        auf deine Nachricht.
       </p>
       <div>
-        <a class="button primary" href="mailto:efe.avci037@gmail.com">E-Mail schreiben</a>
+        <a class="button primary" href="mailto:efe.avci037@gmail.com"
+          >E-Mail schreiben</a
+        >
         <a
           class="button secondary"
           href="https://github.com/efeavci"
           target="_blank"
           rel="noopener noreferrer"
-        >GitHub ↗</a>
+          >GitHub ↗</a
+        >
       </div>
     </section>
   </main>

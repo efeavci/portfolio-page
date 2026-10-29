@@ -1,1 +1,36 @@
-<template><section class="section skills" id="skills"><header class="section-heading"><p class="eyebrow">SKILLS</p><h2>Technologien & Werkzeuge.</h2></header><div class="skill-grid"><article><span>01</span><h3>Development</h3><p>Python · Django · JavaScript · HTML5 · CSS3 · Bootstrap · jQuery · Chart.js · Vue · Vite</p></article><article><span>02</span><h3>Daten</h3><p>MySQL · PostgreSQL · SQLite · MongoDB · XML · NewsML</p></article><article><span>03</span><h3>Infrastructure</h3><p>Windows · Linux · VMware · Hyper-V · Proxmox · Active Directory · Networking</p></article><article><span>04</span><h3>Cloud & Automation</h3><p>Azure · Google Cloud · PowerShell · Bash · CI/CD · Unit Testing</p></article></div></section></template>
+<template>
+  <section class="section skills" id="skills">
+    <header class="section-heading">
+      <p class="eyebrow">SKILLS</p>
+      <h2>Technologien & Werkzeuge.</h2>
+    </header>
+    <div class="skill-grid">
+      <article>
+        <span>01</span>
+        <h3>Development</h3>
+        <p>
+          Python · Django · JavaScript · HTML5 · CSS3 · Bootstrap · jQuery ·
+          Chart.js · Vue · Vite
+        </p>
+      </article>
+      <article>
+        <span>02</span>
+        <h3>Daten</h3>
+        <p>MySQL · PostgreSQL · SQLite · MongoDB · XML · NewsML</p>
+      </article>
+      <article>
+        <span>03</span>
+        <h3>Infrastructure</h3>
+        <p>
+          Windows · Linux · VMware · Hyper-V · Proxmox · Active Directory ·
+          Networking
+        </p>
+      </article>
+      <article>
+        <span>04</span>
+        <h3>Cloud & Automation</h3>
+        <p>Azure · Google Cloud · PowerShell · Bash · CI/CD · Unit Testing</p>
+      </article>
+    </div>
+  </section>
+</template>
