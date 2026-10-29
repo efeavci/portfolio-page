@@ -1,11 +1,18 @@
 <script setup>
-import profileImage from "../../assets/images/profile.jpg";
+import profileImage from "../../assets/images/profile.webp";
 </script>
 
 <template>
   <section class="section about" id="about">
     <div class="about-card">
-      <div class="about-photo"><img :src="profileImage" alt="Efe Avci" /></div>
+      <div class="about-photo">
+        <img
+          :src="profileImage"
+          alt="Efe Avci"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
       <div class="about-copy">
         <p class="eyebrow">ÜBER MICH</p>
         <h2>Informatiker mit vielseitigem IT-Fokus.</h2>
