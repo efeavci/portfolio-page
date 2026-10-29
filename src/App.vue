@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeUnmount, watch, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import HeroSection from './components/HeroSection.vue'
 import ProjectsSection from './components/ProjectsSection.vue'
 import FocusSection from './components/FocusSection.vue'
@@ -31,6 +31,11 @@ const handleKeydown = (event) => {
   if (event.key === 'Escape') closeMenu()
 }
 
+const desktopQuery = window.matchMedia('(min-width: 701px)')
+const handleResize = (event) => {
+  if (event.matches) closeMenu()
+}
+
 watch(menuOpen, (open) => {
   document.body.style.overflow = open ? 'hidden' : ''
 
@@ -41,9 +46,12 @@ watch(menuOpen, (open) => {
   }
 })
 
+onMounted(() => desktopQuery.addEventListener('change', handleResize))
+
 onBeforeUnmount(() => {
   document.body.style.overflow = ''
   window.removeEventListener('keydown', handleKeydown)
+  desktopQuery.removeEventListener('change', handleResize)
 })
 </script>
 
