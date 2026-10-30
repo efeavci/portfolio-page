@@ -37,19 +37,25 @@ import profileImage from "../../assets/images/profile.webp";
 <style scoped>
 @media (min-width: 901px) {
   .about-card {
-    grid-template-columns: 360px 1fr;
-    min-height: 480px;
+    grid-template-columns: 320px 1fr;
+    min-height: 440px;
   }
 
   .about-photo {
-    min-height: 480px;
+    width: 280px;
+    height: 380px;
+    min-height: 0;
+    margin: 30px 0 30px 30px;
+    align-self: center;
+    border-radius: 20px;
   }
 }
 
 @media (max-width: 900px) {
   .about-photo {
-    width: min(100%, 420px);
-    height: 440px;
+    width: min(calc(100% - 64px), 340px);
+    height: 400px;
+    min-height: 0;
     margin: 32px auto 0;
     border-radius: 20px;
   }
@@ -57,8 +63,8 @@ import profileImage from "../../assets/images/profile.webp";
 
 @media (max-width: 480px) {
   .about-photo {
-    width: calc(100% - 40px);
-    height: 340px;
+    width: min(calc(100% - 40px), 300px);
+    height: 350px;
     margin-top: 20px;
   }
 }
