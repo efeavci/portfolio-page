@@ -1,9 +1,17 @@
 <script setup>
+import { ref } from "vue";
 import ecochargeCover from "../../assets/images/ecocharge/cover.png";
 import smartcarConnect from "../../assets/images/ecocharge/smartcar_connect.png";
 import vehicleSelection from "../../assets/images/ecocharge/vehicle_selection.png";
 import chargingPlan from "../../assets/images/ecocharge/charging_plan1.png";
 import settings from "../../assets/images/ecocharge/settings.png";
+const screens = [
+  { title: "Ladeplan", image: chargingPlan, text: "Strompreise und erwarteter Solarertrag zeigen, welche Ladefenster infrage kommen." },
+  { title: "Verbindung", image: smartcarConnect, text: "Über Smartcar verbindet EcoCharge das Fahrzeug mit der App." },
+  { title: "Fahrzeug", image: vehicleSelection, text: "Das ausgewählte Fahrzeug liefert den Batteriestand für die Ladeplanung." },
+  { title: "Einstellungen", image: settings, text: "Wallbox-Leistung, Solaranlage und Ladepriorität lassen sich an die eigene Situation anpassen." }
+];
+const active = ref(0);
 </script>
 
 <template>
@@ -77,68 +85,23 @@ import settings from "../../assets/images/ecocharge/settings.png";
 
     <article class="ecocharge-details" id="ecocharge-details" tabindex="-1" aria-label="EcoCharge im Detail">
       <a class="back-projects" href="#work">← Zur Projektübersicht</a>
-      <div class="ecocharge-intro">
-        <p class="eyebrow">ECOCHARGE · DETAILS</p>
-        <h3>Wie EcoCharge einen Ladeplan erstellt</h3>
-        <p>
-          EcoCharge verbindet Fahrzeugdaten mit Ladepräferenzen, Strompreis,
-          Wetter- und Solardaten, um verschiedene Ladezeitfenster übersichtlich
-          miteinander zu vergleichen.
-        </p>
-      </div>
-
-      <div class="ecocharge-features">
-        <p>
-          Über Smartcar kann EcoCharge ein Fahrzeug verbinden und relevante
-          Fahrzeugdaten wie Batteriestand und Fahrzeuginformationen abrufen.
-        </p>
-        <p>
-          Die Anwendung vergleicht Ladezeitfenster anhand von Strompreis,
-          Wetter- und Solardaten und stellt passende Ladepläne gegenüber.
-        </p>
-        <p>
-          Ladepriorität, Wallbox-Leistung und Solarpanel-Daten lassen sich in
-          den Einstellungen anpassen und fliessen in die Planung ein.
-        </p>
-      </div>
-
-      <h4 class="gallery-title">Einblicke in die App</h4>
-      <div class="ecocharge-gallery">
-        <figure>
-          <img
-            :src="smartcarConnect"
-            alt="EcoCharge Smartcar-Verbindung"
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption>Fahrzeug über Smartcar verbinden</figcaption>
-        </figure>
-        <figure>
-          <img
-            :src="vehicleSelection"
-            alt="EcoCharge Fahrzeugauswahl"
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption>Fahrzeug auswählen</figcaption>
-        </figure>
-        <figure>
-          <img
-            :src="chargingPlan"
-            alt="EcoCharge Ladeplanung"
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption>Ladezeiten vergleichen</figcaption>
-        </figure>
-        <figure>
-          <img
-            :src="settings"
-            alt="EcoCharge Einstellungen für Laden und Solaranlage"
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption>Lade- und Solareinstellungen</figcaption>
+      <div class="case-layout">
+        <div class="case-copy">
+          <p class="case-label">PROJEKT 01 / SMART CHARGING</p>
+          <h3>EcoCharge</h3>
+          <p class="case-lead">Wann lohnt es sich, das Auto zu laden?</p>
+          <p class="case-description">EcoCharge vergleicht Strompreise, Solarertrag und den Batteriestand. So lassen sich passende Ladezeiten direkt am Handy vergleichen.</p>
+          <a class="case-demo" href="https://ecocharge.free.nf/login.php" target="_blank" rel="noopener noreferrer">Live-Demo öffnen ↗</a>
+          <div class="screen-list" role="group" aria-label="App-Ansicht auswählen">
+            <button v-for="(screen, i) in screens" :key="screen.title" type="button"
+              :aria-pressed="active === i" aria-controls="screen-preview" @click="active = i">
+              <span>0{{ i + 1 }}</span>{{ screen.title }}
+            </button>
+          </div>
+        </div>
+        <figure id="screen-preview" class="screen-preview" aria-live="polite">
+          <div class="screen-stage"><img :src="screens[active].image" :alt="'EcoCharge: ' + screens[active].title"></div>
+          <figcaption><strong>{{ screens[active].title }}</strong>{{ screens[active].text }}</figcaption>
         </figure>
       </div>
     </article>
@@ -162,20 +125,25 @@ import settings from "../../assets/images/ecocharge/settings.png";
 .project-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 24px; }
 .project-link { margin-top: 0; padding-block: 5px; }
 .project-link:hover, .back-projects:hover { text-decoration: underline; }
-.ecocharge-details { display: none; scroll-margin-top: 85px; padding-block: clamp(32px, 6vw, 72px); border-bottom: 1px solid var(--border); }
-.ecocharge-details:target { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px 6%; }
-.back-projects, .gallery-title, .ecocharge-gallery { grid-column: 1 / -1; }
-.back-projects { color: #70baff; width: fit-content; }
-.ecocharge-intro h3 { margin: 10px 0 16px; font-size: clamp(26px, 3vw, 40px); line-height: 1.12; }
-.ecocharge-intro > p:last-child, .ecocharge-features p { color: var(--soft); }
-.ecocharge-features p + p { padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--border); }
-.gallery-title { margin: 0; font-size: 22px; }
-.ecocharge-gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; counter-reset: screen; }
-.ecocharge-gallery figure { margin: 0; counter-increment: screen; }
-.ecocharge-gallery img { width: 100%; aspect-ratio: 9 / 16; object-fit: contain; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: block; }
-.ecocharge-gallery figcaption { padding-block: 12px; font-size: 14px; }
-.ecocharge-gallery figcaption::before { content: counter(screen, decimal-leading-zero) " / "; color: var(--muted); font-family: var(--mono); }
-@media (max-width: 900px) { .ecocharge-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 700px) { .ecocharge-details:target { grid-template-columns: 1fr; } }
-@media (max-width: 480px) { .ecocharge-gallery { grid-template-columns: 1fr; } }
+.ecocharge-details { display: none; scroll-margin-top: 85px; padding-block: 32px; }
+.ecocharge-details:target { display: block; }
+.back-projects { display: inline-block; margin-bottom: 18px; color: var(--soft); }
+.case-layout { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; background: #111a19; color: #f1f6f3; border: 1px solid #32413d; border-radius: 18px; }
+.case-copy { padding: clamp(22px,4vw,56px); align-self: center; min-width: 0; }
+.case-label { font: 11px var(--mono); letter-spacing: .12em; color: #a6d9be; }
+.case-copy h3 { font-size: clamp(38px,5vw,68px); line-height: 1.12; letter-spacing: -.05em; margin: 12px 0 24px; }
+.case-lead { font-size: clamp(19px,2vw,25px); line-height: 1.3; }
+.case-description { margin: 12px 0; color: #bfccc5; max-width: 42ch; }
+.case-demo { display: inline-block; color: #c0eccf; text-decoration: underline; text-underline-offset: 4px; }
+.screen-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-top: 32px; }
+.screen-list button { text-align: left; border: 1px solid #4c6058; border-radius: 6px; background: transparent; color: #e2ece6; padding: 10px; font: inherit; font-size: 14px; cursor: pointer; }
+.screen-list button span { display: block; font: 11px var(--mono); margin-bottom: 4px; }
+.screen-list button[aria-pressed=true] { background: #c7e8d4; color: #14291e; }
+.screen-list button:focus-visible { outline: 2px solid white; outline-offset: 2px; }
+.screen-preview { margin: 0; min-width: 0; background: #d8e8df; color: #193025; }
+.screen-stage { display: grid; place-items: center; padding: 28px 16px 20px; background: radial-gradient(ellipse at center,#eef5ee,#cadfd3); }
+.screen-stage img { display: block; width: 100%; height: clamp(280px,38vw,440px); object-fit: contain; filter: drop-shadow(0 6px 9px #1e38262a); }
+.screen-preview figcaption { padding: 16px 24px 22px; font-size: 14px; border-top: 1px solid #b8cec0; min-height: 6em; }
+.screen-preview strong { display: block; margin-bottom: 3px; }
+@media (max-width: 700px) { .case-layout { grid-template-columns: minmax(0,1fr); } .screen-list { margin-top: 20px; } }
 </style>
