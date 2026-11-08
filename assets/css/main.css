@@ -183,7 +183,6 @@ img {
 }
 .button.primary:hover {
   background: #147ce5;
-  transform: translateY(-1px);
 }
 .button.secondary {
   border-color: #3a3a3e;
@@ -845,4 +844,23 @@ footer a {
   * {
     transition: none !important;
   }
+}
+
+/* Hover feedback for mouse users; transitions apply in both directions. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  :is(button, .button, .project-link, .case-demo) {
+    transition: translate 180ms cubic-bezier(.2,.7,.3,1),
+      filter 180ms ease, background-color 180ms ease, border-color 180ms ease;
+  }
+
+  :is(button, .button, .project-link, .case-demo):hover {
+    translate: 0 -2px;
+    filter: brightness(1.12);
+  }
+
+  :is(button, .button, .project-link, .case-demo):active {
+    translate: 0 0;
+  }
+
+  .case-demo { display: inline-block; }
 }
