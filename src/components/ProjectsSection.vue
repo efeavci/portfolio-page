@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import ecochargeCover from "../../assets/images/ecocharge/cover.png";
 import smartcarConnect from "../../assets/images/ecocharge/smartcar_connect.png";
 import vehicleSelection from "../../assets/images/ecocharge/vehicle_selection.png";
@@ -12,6 +12,24 @@ const screens = [
   { title: "Einstellungen", image: settings, text: "Wallbox-Leistung, Solaranlage und Ladepriorität lassen sich an die eigene Situation anpassen." }
 ];
 const active = ref(0);
+const dialog = ref(null);
+const trigger = ref(null);
+
+function openProject() {
+  active.value = 0;
+  dialog.value.showModal();
+}
+
+function restoreFocus() {
+  if (location.hash === "#ecocharge-details") {
+    history.replaceState(history.state, "", "#work");
+  }
+  trigger.value?.focus({ preventScroll: true });
+}
+
+onMounted(() => {
+  if (location.hash === "#ecocharge-details") openProject();
+});
 </script>
 
 <template>
@@ -43,9 +61,7 @@ const active = ref(0);
             ><span>Open-Meteo</span><span>EKZ API</span><span>PWA</span>
           </div>
           <div class="project-actions">
-            <a class="project-link" href="#ecocharge-details"
-              >Projekt ansehen →</a
-            >
+            <button ref="trigger" class="project-link open-project" type="button" aria-haspopup="dialog" @click="openProject">Projekt ansehen →</button>
             <a
               class="project-link"
               href="https://ecocharge.free.nf/login.php"
@@ -83,12 +99,12 @@ const active = ref(0);
       </article>
     </div>
 
-    <article class="ecocharge-details" id="ecocharge-details" tabindex="-1" aria-label="EcoCharge im Detail">
-      <a class="back-projects" href="#work">← Zur Projektübersicht</a>
+    <dialog ref="dialog" class="ecocharge-details" id="ecocharge-details" aria-labelledby="ecocharge-title" @close="restoreFocus" @click.self="dialog.close()">
+      <div class="dialog-bar"><span>Projektansicht</span><button type="button" autofocus @click="dialog.close()">Schliessen ×</button></div>
       <div class="case-layout">
         <div class="case-copy">
           <p class="case-label">PROJEKT 01 / SMART CHARGING</p>
-          <h3>EcoCharge</h3>
+          <h3 id="ecocharge-title">EcoCharge</h3>
           <p class="case-lead">Wann lohnt es sich, das Auto zu laden?</p>
           <p class="case-description">EcoCharge vergleicht Strompreise, Solarertrag und den Batteriestand. So lassen sich passende Ladezeiten direkt am Handy vergleichen.</p>
           <a class="case-demo" href="https://ecocharge.free.nf/login.php" target="_blank" rel="noopener noreferrer">Live-Demo öffnen ↗</a>
@@ -104,7 +120,7 @@ const active = ref(0);
           <figcaption><strong>{{ screens[active].title }}</strong>{{ screens[active].text }}</figcaption>
         </figure>
       </div>
-    </article>
+    </dialog>
   </section>
 </template>
 
@@ -125,9 +141,13 @@ const active = ref(0);
 .project-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 24px; }
 .project-link { margin-top: 0; padding-block: 5px; }
 .project-link:hover, .back-projects:hover { text-decoration: underline; }
-.ecocharge-details { display: none; scroll-margin-top: 85px; padding-block: 32px; }
-.ecocharge-details:target { display: block; }
-.back-projects { display: inline-block; margin-bottom: 18px; color: var(--soft); }
+.open-project { background: none; border: 0; cursor: pointer; font-family: inherit; }
+.ecocharge-details { position: fixed; inset: 0; margin: auto; padding: 0; width: min(960px, calc(100% - 24px)); max-height: 90dvh; overflow: auto; overscroll-behavior: contain; border: 1px solid #40524b; border-radius: 18px; background: #111a19; color: #eef5ef; }
+.ecocharge-details::backdrop { background: rgb(4 8 7 / 78%); backdrop-filter: blur(5px); }
+:global(html:has(dialog.ecocharge-details[open])) { overflow: hidden; }
+.dialog-bar { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; background: #111a19; border-bottom: 1px solid #32413d; font-size: 14px; }
+.dialog-bar button { color: inherit; background: transparent; border: 0; padding: 10px; cursor: pointer; font: inherit; }
+.ecocharge-details .case-layout { border: 0; border-radius: 0; }
 .case-layout { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; background: #111a19; color: #f1f6f3; border: 1px solid #32413d; border-radius: 18px; }
 .case-copy { padding: clamp(22px,4vw,56px); align-self: center; min-width: 0; }
 .case-label { font: 11px var(--mono); letter-spacing: .12em; color: #a6d9be; }
