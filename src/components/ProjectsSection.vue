@@ -16,8 +16,24 @@ const dialog = ref(null);
 const trigger = ref(null);
 
 function openProject() {
+  const panel = dialog.value;
+  if (panel.open) return;
   active.value = 0;
-  dialog.value.showModal();
+  delete panel.dataset.closing;
+  panel.showModal();
+}
+
+async function closeProject() {
+  const panel = dialog.value;
+  if (!panel.open || panel.dataset.closing) return;
+  panel.dataset.closing = "true";
+
+  // Keep the background inert until both the panel and backdrop have faded.
+  getComputedStyle(panel).opacity;
+  const transitions = panel.getAnimations({ subtree: true })
+    .filter(animation => "transitionProperty" in animation);
+  await Promise.allSettled(transitions.map(animation => animation.finished));
+  if (panel.open) panel.close();
 }
 
 function restoreFocus() {
@@ -99,8 +115,8 @@ onMounted(() => {
       </article>
     </div>
 
-    <dialog ref="dialog" class="ecocharge-details" id="ecocharge-details" aria-labelledby="ecocharge-title" @close="restoreFocus" @click.self="dialog.close()">
-      <div class="dialog-bar"><span>Projektansicht</span><button type="button" autofocus @click="dialog.close()">Schliessen ×</button></div>
+    <dialog ref="dialog" class="ecocharge-details" id="ecocharge-details" aria-labelledby="ecocharge-title" @close="restoreFocus" @cancel.prevent="closeProject" @click.self="closeProject">
+      <div class="dialog-bar"><span>Projektansicht</span><button type="button" autofocus @click="closeProject">Schliessen ×</button></div>
       <div class="case-layout">
         <div class="case-copy">
           <p class="case-label">PROJEKT 01 / SMART CHARGING</p>
@@ -166,4 +182,33 @@ onMounted(() => {
 .screen-preview figcaption { padding: 16px 24px 22px; font-size: 14px; border-top: 1px solid #b8cec0; min-height: 6em; }
 .screen-preview strong { display: block; margin-bottom: 3px; }
 @media (max-width: 700px) { .case-layout { grid-template-columns: minmax(0,1fr); } .screen-list { margin-top: 20px; } }
+
+.ecocharge-details[open] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: opacity 240ms ease-out, transform 320ms cubic-bezier(.2,.75,.25,1);
+}
+.ecocharge-details[open]::backdrop {
+  opacity: 1;
+  transition: opacity 240ms ease-out;
+}
+@starting-style {
+  .ecocharge-details[open] { opacity: 0; transform: translateY(12px) scale(.985); }
+  .ecocharge-details[open]::backdrop { opacity: 0; }
+}
+.ecocharge-details[open][data-closing] {
+  opacity: 0;
+  transform: translateY(8px) scale(.99);
+  transition-duration: 180ms, 210ms;
+}
+.ecocharge-details[open][data-closing]::backdrop {
+  opacity: 0;
+  transition-duration: 180ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ecocharge-details[open], .ecocharge-details[open]::backdrop {
+    transition: none !important;
+    transform: none !important;
+  }
+}
 </style>
