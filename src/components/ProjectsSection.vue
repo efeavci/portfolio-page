@@ -10,7 +10,7 @@ import settings from "../../assets/images/ecocharge/settings.png";
   <section class="section projects" id="work">
     <header class="section-heading">
       <p class="eyebrow">PROJEKTE</p>
-      <h2>Projekte, an denen ich gearbeitet habe.</h2>
+      <h2>Meine Projekte</h2>
     </header>
 
     <div class="projects-grid">
@@ -28,9 +28,7 @@ import settings from "../../assets/images/ecocharge/settings.png";
           <p class="meta">PWA · SMART CHARGING</p>
           <h3>EcoCharge</h3>
           <p>
-            Eine Webapplikation für Elektrofahrzeuge, die anhand von
-            Ladepräferenzen, Strompreisen, Fahrzeugdaten und einer
-            Photovoltaikanlage den optimalen Ladezeitpunkt berechnet.
+            EcoCharge vergleicht Strompreise und Solarertrag und schlägt passende Ladezeiten für das Elektroauto vor.
           </p>
           <div class="tags">
             <span>PHP</span><span>MySQL</span><span>Smartcar</span
@@ -38,7 +36,7 @@ import settings from "../../assets/images/ecocharge/settings.png";
           </div>
           <div class="project-actions">
             <a class="project-link" href="#ecocharge-details"
-              >Mehr Informationen →</a
+              >Projekt ansehen →</a
             >
             <a
               class="project-link"
@@ -53,7 +51,7 @@ import settings from "../../assets/images/ecocharge/settings.png";
 
       <article class="project-card">
         <div class="project-image portfolio-art">
-          <span>02</span><strong>EA.</strong>
+          <span>02</span><div class="portfolio-print" aria-hidden="true"><small>PORTFOLIO / EFE AVCI</small><strong>EA.</strong><i>Softwareentwicklung &amp; Systemtechnik</i></div>
         </div>
         <div class="project-content">
           <p class="meta">WEB DEVELOPMENT</p>
@@ -77,10 +75,11 @@ import settings from "../../assets/images/ecocharge/settings.png";
       </article>
     </div>
 
-    <article class="ecocharge-details" id="ecocharge-details">
+    <article class="ecocharge-details" id="ecocharge-details" tabindex="-1" aria-label="EcoCharge im Detail">
+      <a class="back-projects" href="#work">← Zur Projektübersicht</a>
       <div class="ecocharge-intro">
         <p class="eyebrow">ECOCHARGE · DETAILS</p>
-        <h3>Intelligentes Laden mit Fahrzeug- und Umweltdaten.</h3>
+        <h3>Wie EcoCharge einen Ladeplan erstellt</h3>
         <p>
           EcoCharge verbindet Fahrzeugdaten mit Ladepräferenzen, Strompreis,
           Wetter- und Solardaten, um verschiedene Ladezeitfenster übersichtlich
@@ -103,6 +102,7 @@ import settings from "../../assets/images/ecocharge/settings.png";
         </p>
       </div>
 
+      <h4 class="gallery-title">Einblicke in die App</h4>
       <div class="ecocharge-gallery">
         <figure>
           <img
@@ -146,134 +146,36 @@ import settings from "../../assets/images/ecocharge/settings.png";
 </template>
 
 <style scoped>
-.ecocharge-cover {
-  position: relative;
-  padding: 0;
-  overflow: hidden;
-  background: #dff4ec;
-}
-
-.ecocharge-cover > span {
-  position: absolute;
-  z-index: 2;
-  top: 20px;
-  left: 20px;
-  padding: 7px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 999px;
-  background: rgba(5, 5, 6, 0.68);
-  color: #fff;
-  backdrop-filter: blur(10px);
-}
-
-.ecocharge-cover img {
-  width: 100%;
-  height: 100%;
-  min-height: 330px;
-  display: block;
-  object-fit: cover;
-}
-
-.project-actions {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.ecocharge-details {
-  scroll-margin-top: 90px;
-  margin-top: 24px;
-  padding: 42px;
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: 42px 60px;
-  border: 1px solid var(--border);
-  border-radius: 22px;
-  background: var(--surface);
-}
-
-.ecocharge-intro h3 {
-  margin-top: 12px;
-  font-size: clamp(28px, 3vw, 40px);
-  line-height: 1.1;
-  letter-spacing: -0.04em;
-}
-
-.ecocharge-intro > p:last-child {
-  margin-top: 18px;
-  color: var(--muted);
-}
-
-.ecocharge-features {
-  display: grid;
-  gap: 20px;
-}
-
-.ecocharge-features p {
-  padding-bottom: 20px;
-  color: var(--muted);
-  border-bottom: 1px solid var(--border);
-}
-
-.ecocharge-features p:last-child {
-  padding-bottom: 0;
-  border-bottom: 0;
-}
-
-.ecocharge-gallery {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.ecocharge-gallery figure {
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: var(--surface2);
-}
-
-.ecocharge-gallery img {
-  width: 100%;
-  aspect-ratio: 9 / 16;
-  display: block;
-  object-fit: cover;
-  object-position: top;
-}
-
-.ecocharge-gallery figcaption {
-  padding: 12px 14px;
-  color: var(--soft);
-  font-size: 12px;
-}
-
-@media (max-width: 900px) {
-  .ecocharge-gallery {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 700px) {
-  .ecocharge-cover img {
-    min-height: 250px;
-  }
-
-  .ecocharge-details {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    padding: 28px;
-  }
-
-  .ecocharge-gallery {
-    grid-column: auto;
-  }
-}
-
-@media (max-width: 480px) {
-  .ecocharge-gallery {
-    grid-template-columns: 1fr;
-  }
-}
+.projects-grid { align-items: stretch; }
+.project-card { display: flex; flex-direction: column; min-width: 0; }
+.project-image { flex: none; height: auto; aspect-ratio: 16 / 9; }
+.ecocharge-cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.project-image > span { padding: 4px 9px; border-radius: 4px; color: white; background: #15171b; }
+.portfolio-art { background: #dce3eb; }
+.portfolio-print { color: #202d40; width: 72%; border-block: 1px solid #647184; padding-block: 4%; display: grid; }
+.portfolio-print small { font: 10px var(--mono); letter-spacing: .12em; }
+.portfolio-print strong { color: inherit; font: 700 clamp(48px, 6vw, 88px)/1.1 system-ui; letter-spacing: -.08em; }
+.portfolio-print i { font: 12px/1.4 system-ui; }
+.project-content { display: flex; flex: 1; flex-direction: column; align-items: flex-start; }
+.project-content .tags { margin-bottom: 18px; }
+.project-actions, .project-content > .project-link { margin-top: auto; }
+.project-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 24px; }
+.project-link { margin-top: 0; padding-block: 5px; }
+.project-link:hover, .back-projects:hover { text-decoration: underline; }
+.ecocharge-details { display: none; scroll-margin-top: 85px; padding-block: clamp(32px, 6vw, 72px); border-bottom: 1px solid var(--border); }
+.ecocharge-details:target { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px 6%; }
+.back-projects, .gallery-title, .ecocharge-gallery { grid-column: 1 / -1; }
+.back-projects { color: #70baff; width: fit-content; }
+.ecocharge-intro h3 { margin: 10px 0 16px; font-size: clamp(26px, 3vw, 40px); line-height: 1.12; }
+.ecocharge-intro > p:last-child, .ecocharge-features p { color: var(--soft); }
+.ecocharge-features p + p { padding-top: 12px; margin-top: 12px; border-top: 1px solid var(--border); }
+.gallery-title { margin: 0; font-size: 22px; }
+.ecocharge-gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; counter-reset: screen; }
+.ecocharge-gallery figure { margin: 0; counter-increment: screen; }
+.ecocharge-gallery img { width: 100%; aspect-ratio: 9 / 16; object-fit: contain; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; display: block; }
+.ecocharge-gallery figcaption { padding-block: 12px; font-size: 14px; }
+.ecocharge-gallery figcaption::before { content: counter(screen, decimal-leading-zero) " / "; color: var(--muted); font-family: var(--mono); }
+@media (max-width: 900px) { .ecocharge-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .ecocharge-details:target { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .ecocharge-gallery { grid-template-columns: 1fr; } }
 </style>
