@@ -1,24 +1,52 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, onBeforeUnmount, ref } from "vue";
 import ecochargeCover from "../../assets/images/ecocharge/cover.png";
 import smartcarConnect from "../../assets/images/ecocharge/smartcar_connect.png";
 import vehicleSelection from "../../assets/images/ecocharge/vehicle_selection.png";
 import chargingPlan from "../../assets/images/ecocharge/charging_plan1.png";
 import settings from "../../assets/images/ecocharge/settings.png";
+import chargingPlan2 from "../../assets/images/ecocharge/charging_plan2.png";
+import permission1 from "../../assets/images/ecocharge/allow_notallow1.png";
+import permission2 from "../../assets/images/ecocharge/allow_notallow2.png";
+
 const screens = [
-  { title: "Ladeplan", image: chargingPlan, text: "Strompreise und erwarteter Solarertrag zeigen, welche Ladefenster infrage kommen." },
-  { title: "Verbindung", image: smartcarConnect, text: "Über Smartcar verbindet EcoCharge das Fahrzeug mit der App." },
-  { title: "Fahrzeug", image: vehicleSelection, text: "Das ausgewählte Fahrzeug liefert den Batteriestand für die Ladeplanung." },
-  { title: "Einstellungen", image: settings, text: "Wallbox-Leistung, Solaranlage und Ladepriorität lassen sich an die eigene Situation anpassen." }
+  { title: "Titelblatt", heading: "Smart EV Charging", images: [ecochargeCover], text: "EcoCharge ist eine webbasierte Anwendung, die Nutzer von Elektrofahrzeugen dabei unterstützt, den idealen Ladezeitpunkt zu bestimmen. Dabei werden sowohl die persönlichen Anforderungen an den Ladevorgang als auch die verfügbaren Lademöglichkeiten und die Nutzung von Solarenergie berücksichtigt." },
+  { title: "Ladeplan", images: [chargingPlan, chargingPlan2], text: "Der Ladeplan bietet dem Nutzer eine Übersicht darüber, wann das Elektrofahrzeug idealerweise geladen werden sollte. Zusätzlich werden weitere mögliche Ladezeiten angezeigt. Die vorgeschlagenen Zeitpunkte werden anhand der individuellen Ladeeinstellungen und der verfügbaren Energieinformationen ermittelt." },
+  { title: "API Anbindung", images: [permission1, permission2, smartcarConnect], text: "Über Smartcar verbindet EcoCharge das Fahrzeug mit der App." },
+  { title: "Fahrzeug", images: [vehicleSelection], text: "Das ausgewählte Fahrzeug liefert den Batteriestand für die Ladeplanung." },
+  { title: "Einstellungen", images: [settings], text: "Im Einstellungsbereich lassen sich verschiedene Angaben individuell anpassen. Dazu gehören beispielsweise die gewünschten Ladebedingungen, die technischen Eigenschaften der Ladestation, Informationen zur Solaranlage sowie die Daten des Elektrofahrzeugs." }
 ];
+const technologies = ["PHP", "MySQL", "Smartcar", "Open-Meteo", "EKZ API", "PWA"];
+const slide = ref(0);
+let timer;
+let manual = false;
+function stopTimer() { clearInterval(timer); }
+function selectScreen(index) {
+  stopTimer();
+  active.value = index;
+  slide.value = 0;
+  const count = screens[index].images.length;
+  if (count > 1 && !manual && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    timer = setInterval(() => { slide.value = (slide.value + 1) % count; }, 3000);
+  }
+}
+function step(direction) {
+  manual = true;
+  stopTimer();
+  const count = screens[active.value].images.length;
+  slide.value = (slide.value + direction + count) % count;
+}
+onBeforeUnmount(stopTimer);
 const active = ref(0);
 const dialog = ref(null);
 const trigger = ref(null);
+const portfolioLink = ref(null);
 
 function openProject() {
   const panel = dialog.value;
   if (panel.open) return;
-  active.value = 0;
+  manual = false;
+  selectScreen(0);
   delete panel.dataset.closing;
   panel.showModal();
 }
@@ -26,6 +54,7 @@ function openProject() {
 async function closeProject() {
   const panel = dialog.value;
   if (!panel.open || panel.dataset.closing) return;
+  stopTimer();
   panel.dataset.closing = "true";
 
   // Keep the background inert until both the panel and backdrop have faded.
@@ -37,6 +66,7 @@ async function closeProject() {
 }
 
 function restoreFocus() {
+  stopTimer();
   if (location.hash === "#ecocharge-details") {
     history.replaceState(history.state, "", "#work");
   }
@@ -56,7 +86,7 @@ onMounted(() => {
     </header>
 
     <div class="projects-grid">
-      <article class="project-card ecocharge-card">
+      <article class="project-card ecocharge-card" @click="!$event.target.closest('a, button') && openProject()">
         <div class="project-image ecocharge-cover">
           <span>01</span>
           <img
@@ -89,7 +119,7 @@ onMounted(() => {
         </div>
       </article>
 
-      <article class="project-card">
+      <article class="project-card" @click="!$event.target.closest('a, button') && portfolioLink.click()">
         <div class="project-image portfolio-art">
           <span>02</span><div class="portfolio-print" aria-hidden="true"><small>PORTFOLIO / EFE AVCI</small><strong>EA.</strong><i>Softwareentwicklung &amp; Systemtechnik</i></div>
         </div>
@@ -106,7 +136,7 @@ onMounted(() => {
           </div>
           <a
             class="project-link"
-            href="https://github.com/efeavci/portfolio-page"
+            ref="portfolioLink" href="https://github.com/efeavci/portfolio-page"
             target="_blank"
             rel="noopener noreferrer"
             >Repository ansehen ↗</a
@@ -121,19 +151,31 @@ onMounted(() => {
         <div class="case-copy">
           <p class="case-label">PROJEKT 01 / SMART CHARGING</p>
           <h3 id="ecocharge-title">EcoCharge</h3>
-          <p class="case-lead">Wann lohnt es sich, das Auto zu laden?</p>
-          <p class="case-description">EcoCharge vergleicht Strompreise, Solarertrag und den Batteriestand. So lassen sich passende Ladezeiten direkt am Handy vergleichen.</p>
-          <a class="case-demo" href="https://ecocharge.free.nf/login.php" target="_blank" rel="noopener noreferrer">Live-Demo öffnen ↗</a>
+          <div :key="active" class="pane-enter">
+            <p class="case-lead">{{ screens[active].heading || screens[active].title }}</p>
+            <p class="case-description">{{ screens[active].text }}</p>
+            <div v-if="active === 0" class="tags"><span v-for="tool in technologies" :key="tool">{{ tool }}</span></div>
+          </div>
+          <div class="resource-links"><a class="case-demo" href="https://ecocharge.free.nf/login.php" target="_blank" rel="noopener noreferrer">Live-Demo ↗</a>
+            <a class="case-demo" href="https://showroom-bcs.digisus-lab.ch/ecocharge-smartes-laden-fur-dein-elektroauto/" target="_blank" rel="noopener noreferrer">Dokumentation ↗</a></div>
           <div class="screen-list" role="group" aria-label="App-Ansicht auswählen">
             <button v-for="(screen, i) in screens" :key="screen.title" type="button"
-              :aria-pressed="active === i" aria-controls="screen-preview" @click="active = i">
+              :aria-pressed="active === i" aria-controls="screen-preview" @click="selectScreen(i)">
               <span>0{{ i + 1 }}</span>{{ screen.title }}
             </button>
           </div>
         </div>
-        <figure id="screen-preview" class="screen-preview" aria-live="polite">
-          <div class="screen-stage"><img :src="screens[active].image" :alt="'EcoCharge: ' + screens[active].title"></div>
-          <figcaption><strong>{{ screens[active].title }}</strong>{{ screens[active].text }}</figcaption>
+        <figure id="screen-preview" class="screen-preview">
+          <div class="screen-stage">
+            <Transition name="picture">
+              <img :key="screens[active].images[slide]" :src="screens[active].images[slide]" :alt="'EcoCharge – ' + screens[active].title + ', Bild ' + (slide + 1)">
+            </Transition>
+            <template v-if="screens[active].images.length > 1">
+              <button class="arrow prev" type="button" aria-label="Vorheriges Bild" @click="step(-1)">‹</button>
+              <button class="arrow next" type="button" aria-label="Nächstes Bild" @click="step(1)">›</button>
+            </template>
+          </div>
+          <figcaption><strong>{{ screens[active].title }}</strong><span v-if="screens[active].images.length > 1">Bild {{ slide + 1 }} von {{ screens[active].images.length }}</span></figcaption>
         </figure>
       </div>
     </dialog>
@@ -210,5 +252,21 @@ onMounted(() => {
     transition: none !important;
     transform: none !important;
   }
+}
+
+.project-card { cursor: pointer; }
+.resource-links { display: flex; flex-wrap: wrap; gap: 16px; margin-block: 18px; }
+.screen-stage { position: relative; overflow: hidden; }
+.screen-stage img { grid-area: 1 / 1; }
+.arrow { position: absolute; top: 50%; margin-top: -22px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #607669; background: #172b22; color: white; font: 26px/1 system-ui; cursor: pointer; }
+.prev { left: 6px; } .next { right: 6px; }
+.picture-enter-active, .picture-leave-active { transition: opacity .36s ease, transform .36s ease; }
+.picture-enter-from { opacity: 0; transform: translateX(7px); }
+.picture-leave-to { opacity: 0; transform: translateX(-7px); }
+.pane-enter { animation: pane-in .3s ease-out; }
+@keyframes pane-in { from { opacity: 0; transform: translateY(5px); } }
+@media (prefers-reduced-motion: reduce) {
+  .picture-enter-active, .picture-leave-active { transition: none; }
+  .pane-enter { animation: none; }
 }
 </style>
