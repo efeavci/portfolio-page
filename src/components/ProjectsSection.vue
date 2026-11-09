@@ -166,16 +166,20 @@ onMounted(() => {
           <div class="resource-links"><a href="https://ecocharge.free.nf/login.php" target="_blank" rel="noopener noreferrer">Live-Demo ↗</a><a href="https://showroom-bcs.digisus-lab.ch/ecocharge-smartes-laden-fur-dein-elektroauto/" target="_blank" rel="noopener noreferrer">Dokumentation ↗</a></div>
         </div>
         <figure id="screen-preview" class="screen-preview">
-          <div class="screen-stage">
+          <a class="screen-stage" :href="screens[active].images[slide]" target="_blank" rel="noopener noreferrer"
+            :aria-label="screens[active].title + ': Originalbild in neuem Tab öffnen'">
             <Transition name="picture">
               <img :key="screens[active].images[slide]" :src="screens[active].images[slide]" :alt="'EcoCharge – ' + screens[active].title + ', Bild ' + (slide + 1)">
             </Transition>
-            <template v-if="screens[active].images.length > 1">
-              <button class="arrow prev" type="button" aria-label="Vorheriges Bild" @click="step(-1)">‹</button>
-              <button class="arrow next" type="button" aria-label="Nächstes Bild" @click="step(1)">›</button>
-            </template>
-          </div>
-          <figcaption v-if="screens[active].images.length > 1">{{ screens[active].title }} · Bild {{ slide + 1 }} von {{ screens[active].images.length }}</figcaption>
+          </a>
+          <figcaption>
+            <a :href="screens[active].images[slide]" target="_blank" rel="noopener noreferrer">Originalbild ↗</a>
+            <div v-if="screens[active].images.length > 1" class="gallery-controls">
+              <button class="arrow" type="button" aria-label="Vorheriges Bild" @click="step(-1)">‹</button>
+              <span>{{ slide + 1 }} / {{ screens[active].images.length }}</span>
+              <button class="arrow" type="button" aria-label="Nächstes Bild" @click="step(1)">›</button>
+            </div>
+          </figcaption>
         </figure>
       </div>
     </dialog>
@@ -217,15 +221,26 @@ onMounted(() => {
 .case-description { margin:10px 0 16px; font-size:15px; line-height:1.65; color:#c5cfc9; }
 .resource-links a { color:#d3ebda; text-decoration:underline; text-underline-offset:4px; font-size:14px; }
 .screen-preview { margin:0; min-width:0; }
-.screen-stage { display:grid; place-items:center; border-radius:12px; background:#22332c; }
-.screen-stage img { width:100%; height:clamp(235px,46vh,400px); display:block; object-fit:contain; }
-.cover .screen-stage img { height:auto; }
-.screen-preview figcaption { color:#aab8b0; font:12px/1.5 var(--mono); margin-top:8px; text-align:center; }
+.screen-stage {
+  display:grid; place-items:center; height:clamp(280px,54vh,480px); padding:14px;
+  border:1px solid #354740; border-radius:14px; overflow:hidden; cursor:zoom-in;
+  background:radial-gradient(ellipse at 50% 35%, #334b40, #17231f 85%);
+}
+.screen-stage img {
+  grid-area:1/1; display:block; width:auto; height:auto; max-width:100%; max-height:100%; min-height:0;
+  object-fit:contain; border-radius:6px; box-shadow:0 2px 5px #08130c55,0 8px 20px #08130c55;
+}
+.screen-stage { grid-template: minmax(0,1fr) / minmax(0,1fr); }
+.cover .screen-stage { height:auto; padding:0; display:block; }
+.cover .screen-stage img { width:100%; border-radius:0; }
+.screen-preview figcaption { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:9px 2px; color:#b9c9bf; font:12px/1.4 var(--mono); }
+.screen-preview figcaption a { color:inherit; text-underline-offset:3px; }
+.gallery-controls { display:flex; align-items:center; gap:8px; font-variant-numeric:tabular-nums; }
 @media(max-width:680px) {
  .case-layout { grid-template-columns:minmax(0,1fr); }
  .screen-list { gap:2px 12px; padding-inline:14px; }
  .screen-list button { font-size:13px; }
- .screen-stage img { height:310px; }
+ .screen-stage { height:clamp(270px,50svh,440px); padding:10px; }
 }
 .ecocharge-details[open] {
   opacity: 1;
@@ -258,10 +273,7 @@ onMounted(() => {
 
 .project-card { cursor: pointer; }
 .resource-links { display: flex; flex-wrap: wrap; gap: 16px; margin-block: 18px; }
-.screen-stage { position: relative; overflow: hidden; }
-.screen-stage img { grid-area: 1 / 1; }
-.arrow { position: absolute; top: 50%; margin-top: -22px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #607669; background: #172b22; color: white; font: 26px/1 system-ui; cursor: pointer; }
-.prev { left: 6px; } .next { right: 6px; }
+.arrow { display:grid; place-items:center; width:36px; height:36px; border-radius:50%; border:1px solid #496052; background:#1c2c24; color:#def2e4; font:22px/1 system-ui; cursor:pointer; }
 .picture-enter-active, .picture-leave-active { transition: opacity .36s ease, transform .36s ease; }
 .picture-enter-from { opacity: 0; transform: translateX(7px); }
 .picture-leave-to { opacity: 0; transform: translateX(-7px); }
