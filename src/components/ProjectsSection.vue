@@ -49,6 +49,7 @@ function openProject() {
   selectScreen(0);
   delete panel.dataset.closing;
   panel.showModal();
+  panel.scrollTop = 0;
 }
 
 async function closeProject() {
@@ -146,24 +147,23 @@ onMounted(() => {
     </div>
 
     <dialog ref="dialog" class="ecocharge-details" id="ecocharge-details" aria-labelledby="ecocharge-title" @close="restoreFocus" @cancel.prevent="closeProject" @click.self="closeProject">
-      <div class="dialog-bar"><span>Projektansicht</span><button type="button" autofocus @click="closeProject">Schliessen ×</button></div>
-      <div class="case-layout">
-        <div class="case-copy">
-          <p class="case-label">PROJEKT 01 / SMART CHARGING</p>
-          <h3 id="ecocharge-title">EcoCharge</h3>
-          <div :key="active" class="pane-enter">
-            <p class="case-lead">{{ screens[active].heading || screens[active].title }}</p>
-            <p class="case-description">{{ screens[active].text }}</p>
-            <div v-if="active === 0" class="tags"><span v-for="tool in technologies" :key="tool">{{ tool }}</span></div>
-          </div>
-          <div class="resource-links"><a class="case-demo" href="https://ecocharge.free.nf/login.php" target="_blank" rel="noopener noreferrer">Live-Demo ↗</a>
-            <a class="case-demo" href="https://showroom-bcs.digisus-lab.ch/ecocharge-smartes-laden-fur-dein-elektroauto/" target="_blank" rel="noopener noreferrer">Dokumentation ↗</a></div>
-          <div class="screen-list" role="group" aria-label="App-Ansicht auswählen">
+      <header class="dialog-bar"><span>Projekte <b>/</b> EcoCharge</span><button aria-label="Projektansicht schliessen" type="button" autofocus @click="closeProject">×</button></header>
+      <div class="screen-list" role="group" aria-label="App-Ansicht auswählen">
             <button v-for="(screen, i) in screens" :key="screen.title" type="button"
               :aria-pressed="active === i" aria-controls="screen-preview" @click="selectScreen(i)">
-              <span>0{{ i + 1 }}</span>{{ screen.title }}
+              {{ screen.title }}
             </button>
           </div>
+      <div class="case-layout" :class="{ cover: active === 0 }">
+        <div class="case-copy">
+          <p class="case-label">SMART CHARGING · PWA</p>
+          <h3 id="ecocharge-title">EcoCharge</h3>
+          <div :key="active" class="pane-enter">
+            <h4 class="case-lead">{{ screens[active].heading || screens[active].title }}</h4>
+            <p class="case-description">{{ screens[active].text }}</p>
+            <p v-if="active === 0" class="stack">{{ technologies.join(' · ') }}</p>
+          </div>
+          <div class="resource-links"><a href="https://ecocharge.free.nf/login.php" target="_blank" rel="noopener noreferrer">Live-Demo ↗</a><a href="https://showroom-bcs.digisus-lab.ch/ecocharge-smartes-laden-fur-dein-elektroauto/" target="_blank" rel="noopener noreferrer">Dokumentation ↗</a></div>
         </div>
         <figure id="screen-preview" class="screen-preview">
           <div class="screen-stage">
@@ -175,7 +175,7 @@ onMounted(() => {
               <button class="arrow next" type="button" aria-label="Nächstes Bild" @click="step(1)">›</button>
             </template>
           </div>
-          <figcaption><strong>{{ screens[active].title }}</strong><span v-if="screens[active].images.length > 1">Bild {{ slide + 1 }} von {{ screens[active].images.length }}</span></figcaption>
+          <figcaption v-if="screens[active].images.length > 1">{{ screens[active].title }} · Bild {{ slide + 1 }} von {{ screens[active].images.length }}</figcaption>
         </figure>
       </div>
     </dialog>
@@ -203,28 +203,30 @@ onMounted(() => {
 .ecocharge-details { position: fixed; inset: 0; margin: auto; padding: 0; width: min(960px, calc(100% - 24px)); max-height: 90dvh; overflow: auto; overscroll-behavior: contain; border: 1px solid #40524b; border-radius: 18px; background: #111a19; color: #eef5ef; }
 .ecocharge-details::backdrop { background: rgb(4 8 7 / 78%); backdrop-filter: blur(5px); }
 :global(html:has(dialog.ecocharge-details[open])) { overflow: hidden; }
-.dialog-bar { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; background: #111a19; border-bottom: 1px solid #32413d; font-size: 14px; }
-.dialog-bar button { color: inherit; background: transparent; border: 0; padding: 10px; cursor: pointer; font: inherit; }
-.ecocharge-details .case-layout { border: 0; border-radius: 0; }
-.case-layout { display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; background: #111a19; color: #f1f6f3; border: 1px solid #32413d; border-radius: 18px; }
-.case-copy { padding: clamp(22px,4vw,56px); align-self: center; min-width: 0; }
-.case-label { font: 11px var(--mono); letter-spacing: .12em; color: #a6d9be; }
-.case-copy h3 { font-size: clamp(38px,5vw,68px); line-height: 1.12; letter-spacing: -.05em; margin: 12px 0 24px; }
-.case-lead { font-size: clamp(19px,2vw,25px); line-height: 1.3; }
-.case-description { margin: 12px 0; color: #bfccc5; max-width: 42ch; }
-.case-demo { display: inline-block; color: #c0eccf; text-decoration: underline; text-underline-offset: 4px; }
-.screen-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-top: 32px; }
-.screen-list button { text-align: left; border: 1px solid #4c6058; border-radius: 6px; background: transparent; color: #e2ece6; padding: 10px; font: inherit; font-size: 14px; cursor: pointer; }
-.screen-list button span { display: block; font: 11px var(--mono); margin-bottom: 4px; }
-.screen-list button[aria-pressed=true] { background: #c7e8d4; color: #14291e; }
-.screen-list button:focus-visible { outline: 2px solid white; outline-offset: 2px; }
-.screen-preview { margin: 0; min-width: 0; background: #d8e8df; color: #193025; }
-.screen-stage { display: grid; place-items: center; padding: 28px 16px 20px; background: radial-gradient(ellipse at center,#eef5ee,#cadfd3); }
-.screen-stage img { display: block; width: 100%; height: clamp(280px,38vw,440px); object-fit: contain; filter: drop-shadow(0 6px 9px #1e38262a); }
-.screen-preview figcaption { padding: 16px 24px 22px; font-size: 14px; border-top: 1px solid #b8cec0; min-height: 6em; }
-.screen-preview strong { display: block; margin-bottom: 3px; }
-@media (max-width: 700px) { .case-layout { grid-template-columns: minmax(0,1fr); } .screen-list { margin-top: 20px; } }
-
+.dialog-bar { display:flex; align-items:center; justify-content:space-between; padding:10px 20px; color:#cdd6d0; font-size:13px; border-bottom:1px solid #34403b; }
+.dialog-bar b { margin:0 6px; color:#789085; }
+.dialog-bar button { width:38px; height:38px; border:1px solid #435149; border-radius:50%; background:none; color:#f1f5ef; font:24px/1 system-ui; cursor:pointer; }
+.ecocharge-details :focus-visible { outline:2px solid #aad5b9; outline-offset:2px; }
+.screen-list { display:flex; flex-wrap:wrap; gap:4px 16px; padding:8px 20px 0; border-bottom:1px solid #34403b; }
+.screen-list button { font:inherit; font-size:14px; padding:8px 0; color:#b8c4bd; background:none; border:0; border-bottom:2px solid transparent; cursor:pointer; }
+.screen-list button[aria-pressed=true] { color:#d4f5dc; border-color:#a6d9b7; }
+.case-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); align-items:center; gap:clamp(20px,4vw,40px); padding:clamp(18px,3vw,36px); }
+.case-label,.stack { font:12px/1.6 var(--mono); color:#accdb7; }
+.case-copy h3 { font-size:clamp(34px,4vw,56px); line-height:1.08; letter-spacing:-.05em; margin:8px 0 18px; }
+.case-lead { font-size:21px; font-weight:550; }
+.case-description { margin:10px 0 16px; font-size:15px; line-height:1.65; color:#c5cfc9; }
+.resource-links a { color:#d3ebda; text-decoration:underline; text-underline-offset:4px; font-size:14px; }
+.screen-preview { margin:0; min-width:0; }
+.screen-stage { display:grid; place-items:center; border-radius:12px; background:#22332c; }
+.screen-stage img { width:100%; height:clamp(235px,46vh,400px); display:block; object-fit:contain; }
+.cover .screen-stage img { height:auto; }
+.screen-preview figcaption { color:#aab8b0; font:12px/1.5 var(--mono); margin-top:8px; text-align:center; }
+@media(max-width:680px) {
+ .case-layout { grid-template-columns:minmax(0,1fr); }
+ .screen-list { gap:2px 12px; padding-inline:14px; }
+ .screen-list button { font-size:13px; }
+ .screen-stage img { height:310px; }
+}
 .ecocharge-details[open] {
   opacity: 1;
   transform: translateY(0) scale(1);
