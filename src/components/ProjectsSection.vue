@@ -161,6 +161,7 @@ onMounted(() => {
       <div class="monitor-body">
         <p class="case-label">DATENANALYSE / MONITORING</p>
         <h3 id="monitor-title">Monitoring-Dashboard</h3>
+        <p><strong>Technologien und Tools:</strong> Django (Python), HTML, CSS, JavaScript, MySQL, PostgreSQL, XML und Claude.</p>
         <p>Von der Artikelproduktion bis zur Bildnutzung: Wähle eine Ansicht oder blättere durch das Projekt.</p>
         <label class="monitor-select">Ansicht
           <select v-model.number="monitorIndex">
