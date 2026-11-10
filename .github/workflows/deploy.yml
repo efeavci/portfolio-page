@@ -3,6 +3,8 @@ name: Deploy
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '17,47 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -16,6 +18,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,6 +27,26 @@ jobs:
           node-version: 22
       - run: npm ci
       - run: npm run build
+      - name: Check for preview branch
+        id: preview
+        shell: bash
+        run: |
+          refs=$(git ls-remote --heads origin refs/heads/feature/monitoring-projekt)
+          if [[ -n "$refs" ]]; then echo "present=true" >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/checkout@v4
+        if: steps.preview.outputs.present == 'true'
+        with:
+          ref: feature/monitoring-projekt
+          path: preview-src
+          persist-credentials: false
+      - name: Build branch preview
+        if: steps.preview.outputs.present == 'true'
+        working-directory: preview-src
+        run: |
+          npm ci
+          npm run build -- --base=/portfolio-page/vorschau/
+          mkdir -p ../dist/vorschau
+          cp -a dist/. ../dist/vorschau/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
