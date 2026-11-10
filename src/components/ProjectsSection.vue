@@ -40,7 +40,6 @@ onBeforeUnmount(stopTimer);
 const active = ref(0);
 const dialog = ref(null);
 const trigger = ref(null);
-const portfolioLink = ref(null);
 
 function openProject() {
   const panel = dialog.value;
@@ -89,7 +88,6 @@ onMounted(() => {
     <div class="projects-grid">
       <article class="project-card ecocharge-card" @click="!$event.target.closest('a, button') && openProject()">
         <div class="project-image ecocharge-cover">
-          <span>01</span>
           <img
             :src="ecochargeCover"
             alt="EcoCharge – Smart-Charging-Webapplikation"
@@ -120,28 +118,10 @@ onMounted(() => {
         </div>
       </article>
 
-      <article class="project-card" @click="!$event.target.closest('a, button') && portfolioLink.click()">
-        <div class="project-image portfolio-art">
-          <span>02</span><div class="portfolio-print" aria-hidden="true"><small>PORTFOLIO / EFE AVCI</small><strong>EA.</strong><i>Softwareentwicklung &amp; Systemtechnik</i></div>
-        </div>
+      <article class="project-card monitoring-card">
         <div class="project-content">
-          <p class="meta">WEB DEVELOPMENT</p>
-          <h3>Portfolio</h3>
-          <p>
-            Meine persönliche Portfolio-Seite für Projekte, Skills, Ausbildung
-            und Berufserfahrung – umgesetzt mit Vue und Vite.
-          </p>
-          <div class="tags">
-            <span>Vue</span><span>Vite</span><span>JavaScript</span
-            ><span>CSS</span><span>GitHub</span>
-          </div>
-          <a
-            class="project-link"
-            ref="portfolioLink" href="https://github.com/efeavci/portfolio-page"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Repository ansehen ↗</a
-          >
+          <h3>Monitoring</h3>
+          <p>Projektdetails folgen.</p>
         </div>
       </article>
     </div>
@@ -166,14 +146,12 @@ onMounted(() => {
           <div class="resource-links"><a href="https://ecocharge.free.nf/login.php" target="_blank" rel="noopener noreferrer">Live-Demo ↗</a><a href="https://showroom-bcs.digisus-lab.ch/ecocharge-smartes-laden-fur-dein-elektroauto/" target="_blank" rel="noopener noreferrer">Dokumentation ↗</a></div>
         </div>
         <figure id="screen-preview" class="screen-preview">
-          <a class="screen-stage" :href="screens[active].images[slide]" target="_blank" rel="noopener noreferrer"
-            :aria-label="screens[active].title + ': Originalbild in neuem Tab öffnen'">
+          <div class="screen-stage" @contextmenu.prevent>
             <Transition name="picture">
-              <img :key="screens[active].images[slide]" :src="screens[active].images[slide]" :alt="'EcoCharge – ' + screens[active].title + ', Bild ' + (slide + 1)">
+              <img draggable="false" :key="screens[active].images[slide]" :src="screens[active].images[slide]" :alt="'EcoCharge – ' + screens[active].title + ', Bild ' + (slide + 1)">
             </Transition>
-          </a>
-          <figcaption>
-            <a :href="screens[active].images[slide]" target="_blank" rel="noopener noreferrer">Originalbild ↗</a>
+          </div>
+          <figcaption v-if="screens[active].images.length > 1">
             <div v-if="screens[active].images.length > 1" class="gallery-controls">
               <button class="arrow" type="button" aria-label="Vorheriges Bild" @click="step(-1)">‹</button>
               <span>{{ slide + 1 }} / {{ screens[active].images.length }}</span>
@@ -192,11 +170,6 @@ onMounted(() => {
 .project-image { flex: none; height: auto; aspect-ratio: 16 / 9; }
 .ecocharge-cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .project-image > span { padding: 4px 9px; border-radius: 4px; color: white; background: #15171b; }
-.portfolio-art { background: #dce3eb; }
-.portfolio-print { color: #202d40; width: 72%; border-block: 1px solid #647184; padding-block: 4%; display: grid; }
-.portfolio-print small { font: 10px var(--mono); letter-spacing: .12em; }
-.portfolio-print strong { color: inherit; font: 700 clamp(48px, 6vw, 88px)/1.1 system-ui; letter-spacing: -.08em; }
-.portfolio-print i { font: 12px/1.4 system-ui; }
 .project-content { display: flex; flex: 1; flex-direction: column; align-items: flex-start; }
 .project-content .tags { margin-bottom: 18px; }
 .project-actions, .project-content > .project-link { margin-top: auto; }
@@ -223,7 +196,7 @@ onMounted(() => {
 .screen-preview { margin:0; min-width:0; }
 .screen-stage {
   display:grid; place-items:center; height:clamp(280px,54vh,480px); padding:14px;
-  border:1px solid #354740; border-radius:14px; overflow:hidden; cursor:zoom-in;
+  border:1px solid #354740; border-radius:14px; overflow:hidden; user-select:none;
   background:radial-gradient(ellipse at 50% 35%, #334b40, #17231f 85%);
 }
 .screen-stage img {
@@ -271,7 +244,9 @@ onMounted(() => {
   }
 }
 
-.project-card { cursor: pointer; }
+.ecocharge-card { cursor: pointer; }
+.monitoring-card { justify-content: center; }
+.monitoring-card .project-content { flex: none; }
 .resource-links { display: flex; flex-wrap: wrap; gap: 16px; margin-block: 18px; }
 .arrow { display:grid; place-items:center; width:36px; height:36px; border-radius:50%; border:1px solid #496052; background:#1c2c24; color:#def2e4; font:22px/1 system-ui; cursor:pointer; }
 .picture-enter-active, .picture-leave-active { transition: opacity .36s ease, transform .36s ease; }
