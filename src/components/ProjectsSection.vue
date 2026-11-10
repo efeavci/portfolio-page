@@ -46,8 +46,28 @@ const monitorIndex = ref(0);
 function openMonitoring() {
   monitorIndex.value = 0;
   monitorDialog.value.showModal();
+  monitorDialog.value.querySelector(".doc-scroll").scrollTop = 0;
 }
 const technologies = ["PHP", "MySQL", "Smartcar", "Open-Meteo", "EKZ API", "PWA"];
+const shortTitles = ['Einleitung','Login','Übersicht','Produktion','Inhaltsanalyse','Sprachen','Bildnutzung','Publisher','Top 50','Nutzungsverlauf','Alerts'];
+function jump(event,i) {
+  const box = event.currentTarget.closest('dialog').querySelector('.doc-scroll');
+  const target = box.querySelectorAll('[data-chapter]')[i];
+  box.scrollTo({ top: box.scrollTop + target.getBoundingClientRect().top - box.getBoundingClientRect().top, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+}
+function sync(event, eco) {
+  const box = event.currentTarget;
+  const chapters = [...box.querySelectorAll('[data-chapter]')];
+  const top = box.getBoundingClientRect().top + 12;
+  let i = chapters.reduce((n,el,j) => el.getBoundingClientRect().top <= top ? j : n, 0);
+  if (box.scrollTop > 0 && box.scrollHeight - box.clientHeight - box.scrollTop < 2) i = chapters.length - 1;
+  if (i === (eco ? active.value : monitorIndex.value)) return;
+  if (eco) selectScreen(i); else monitorIndex.value = i;
+  const nav = box.closest('dialog').querySelector('.chapter-nav');
+  const button = nav.children[i];
+  const rect = button.getBoundingClientRect(), bounds = nav.getBoundingClientRect();
+  if (rect.left < bounds.left || rect.right > bounds.right) nav.scrollLeft += rect.left - bounds.left - 8;
+}
 const slide = ref(0);
 let timer;
 let manual = false;
@@ -79,7 +99,7 @@ function openProject() {
   selectScreen(0);
   delete panel.dataset.closing;
   panel.showModal();
-  panel.scrollTop = 0;
+  panel.querySelector(".doc-scroll").scrollTop = 0;
 }
 
 async function closeProject() {
@@ -154,47 +174,33 @@ onMounted(() => {
           <img :src="monitorCover" alt="Titelbild des Keystone SDA Monitoring Dashboards" draggable="false" @contextmenu.prevent>
         </div>
         <div class="project-content"><p class="meta">DATENANALYSE · DASHBOARD</p><h3>Monitoring</h3><p>Artikelproduktion, Publisher und Bildnutzung im Überblick.</p>
-          <button class="project-link open-project" type="button" aria-haspopup="dialog" @click="openMonitoring">Projekt ansehen →</button>
+          <div class="tags"><span v-for="tool in monitorTools" :key="tool">{{ tool }}</span></div>
+          <div class="project-actions"><button class="project-link open-project" type="button" aria-haspopup="dialog" @click="openMonitoring">Projekt ansehen →</button></div>
         </div>
       </article>
     </div>
 
     <dialog ref="monitorDialog" class="ecocharge-details monitor-dialog" aria-labelledby="monitor-title" @click.self="monitorDialog.close()">
       <header class="dialog-bar"><span>Projekte / Monitoring</span><button type="button" aria-label="Projektansicht schliessen" @click="monitorDialog.close()">×</button></header>
-      <div class="monitor-body">
+      <nav class="chapter-nav" aria-label="Monitoring-Kapitel"><button type="button" v-for="(item,i) in monitoringImages" :key="item.title" :aria-current="(monitorIndex === i) ? 'location' : undefined" @click="jump($event,i)">{{ shortTitles[i] }}</button></nav>
+<div class="doc-scroll monitor-body" @scroll.passive="sync($event,false)">
         <p class="case-label">DATENANALYSE / MONITORING</p>
         <h3 id="monitor-title">Keystone SDA Monitoring Dashboard</h3>
         <div class="project-tools" ><strong>Technologien &amp; Tools</strong><ul><li v-for="tool in monitorTools" :key="tool">{{ tool }}</li></ul></div>
-        <p>Wähle ein Kapitel der Dokumentation oder blättere mit den Pfeilen weiter.</p>
-        <label class="monitor-select">Kapitel
-          <select v-model.number="monitorIndex">
-            <option v-for="(shot, i) in monitoringImages" :key="shot.image" :value="i">{{ i + 1 }}. {{ shot.title }}</option>
-          </select>
-        </label>
-        <figure class="monitor-figure">
-          <div class="monitor-stage" :class="{ coverShot: monitorIndex === 0 }" @contextmenu.prevent>
-            <Transition name="picture"><img :key="monitorIndex" class="monitor-shot" draggable="false" :src="monitoringImages[monitorIndex].image" :alt="'Monitoring: ' + monitoringImages[monitorIndex].title"></Transition>
-          </div>
-          <figcaption class="monitor-caption"><strong>{{ monitoringImages[monitorIndex].title }}</strong>
-            <div class="gallery-controls">
-              <button class="arrow" type="button" aria-label="Vorheriges Bild" @click="monitorIndex = (monitorIndex + monitoringImages.length - 1) % monitoringImages.length">‹</button>
-              <span>{{ monitorIndex + 1 }} / {{ monitoringImages.length }}</span>
-              <button class="arrow" type="button" aria-label="Nächstes Bild" @click="monitorIndex = (monitorIndex + 1) % monitoringImages.length">›</button>
-            </div>
-          </figcaption>
-        </figure>
-<section v-if="monitorIndex === 0" class="doc-copy"><h4>Einleitung</h4>
+        
+        
+<section data-chapter class="doc-copy"><h4>Einleitung</h4><img class="chapter-shot" loading="lazy" draggable="false" @contextmenu.prevent :src="monitoringImages[0].image" :alt="monitoringImages[0].title">
 <p>Das Keystone SDA Monitoring Dashboard ist eine webbasierte Analyseplattform zur Überwachung und Auswertung von Nachrichtenartikeln, deren Nutzung durch Publisher sowie der Verwendung von Bildmaterial.</p>
 <p>Die Anwendung stellt verschiedene Kennzahlen, Diagramme und Tabellen zur Verfügung, um die Artikelproduktion, Nutzungsmuster und Aktivitäten einzelner Publisher transparent darzustellen.</p>
 <p>Das Dashboard ermöglicht es, Daten über unterschiedliche Zeiträume auszuwerten, gezielt nach Kriterien zu filtern und Veränderungen in der Nutzung zu erkennen.</p>
 <p>Die Benutzeroberfläche ist in mehrere Bereiche unterteilt: Article Overview, Article Usage, Unused Articles, Image Usage, Publishers und Alerts.</p></section>
-<section v-if="monitorIndex === 1" class="doc-copy"><h4>Login und Authentifizierung</h4>
+<section data-chapter class="doc-copy"><h4>Login und Authentifizierung</h4><img class="chapter-shot" loading="lazy" draggable="false" @contextmenu.prevent :src="monitoringImages[1].image" :alt="monitoringImages[1].title">
 <p>Die Login-Seite bildet den Einstiegspunkt in die Keystone SDA Monitoring-Plattform.</p>
 <p>Benutzer können sich über zwei verschiedene Anmeldemethoden authentifizieren.</p>
 <p>Google-Anmeldung: Über die Google-Anmeldefunktion können sich Benutzer mit ihrem Google-Konto anmelden.</p>
 <p>Benutzername und Passwort: Alternativ steht eine klassische Anmeldung zur Verfügung, bei der die Benutzer ihre Zugangsdaten manuell eingeben.</p>
 <p>Nach erfolgreicher Authentifizierung erhalten Benutzer Zugriff auf die Monitoring- und Analysefunktionen entsprechend ihren Berechtigungen.</p></section>
-<section v-if="monitorIndex === 2" class="doc-copy"><h4>Article Overview – Artikelübersicht</h4>
+<section data-chapter class="doc-copy"><h4>Article Overview – Artikelübersicht</h4><img class="chapter-shot" loading="lazy" draggable="false" @contextmenu.prevent :src="monitoringImages[2].image" :alt="monitoringImages[2].title">
 <p>Die Seite Article Overview bietet eine zentrale Übersicht über die Artikelproduktion und die Nutzung der bereitgestellten Nachrichteninhalte.</p>
 <p>Im oberen Bereich befindet sich eine Filtersektion, über die Benutzer den gewünschten Auswertungszeitraum sowie weitere Kriterien definieren können.</p>
 <h5>Filtermöglichkeiten</h5>
@@ -207,7 +213,7 @@ onMounted(() => {
 <p>No RTP: Zeigt die Anzahl der Artikel ohne Ready-to-Publish-Kennzeichnung.</p>
 <p>Zusätzlich werden prozentuale Veränderungen gegenüber einem Vergleichszeitraum dargestellt.</p>
 <p>Diese Kennzahlen ermöglichen eine schnelle Einschätzung der Artikelproduktion und der Nutzung durch Publisher.</p></section>
-<section v-if="monitorIndex === 3" class="doc-copy"><h4>Article Production – Artikelproduktion</h4>
+<section data-chapter class="doc-copy"><h4>Article Production – Artikelproduktion</h4><img class="chapter-shot" loading="lazy" draggable="false" @contextmenu.prevent :src="monitoringImages[3].image" :alt="monitoringImages[3].title">
 <p>Der Bereich Article Production visualisiert die tägliche Artikelproduktion anhand eines gestapelten Balkendiagramms.</p>
 <p>Die horizontale Achse zeigt die einzelnen Tage des ausgewählten Zeitraums. Die vertikale Achse stellt die Anzahl produzierter Artikel dar.</p>
 <p>Jeder Balken repräsentiert die gesamte Artikelproduktion eines Tages und ist in verschiedene Themenbereiche unterteilt.</p>
@@ -215,7 +221,7 @@ onMounted(() => {
 <p>Jeder Themenbereich wird durch eine eigene Farbe dargestellt.</p>
 <p>Dadurch lässt sich erkennen, wie sich die tägliche Artikelproduktion auf die verschiedenen Themen verteilt.</p>
 <p>Das Diagramm unterstützt insbesondere die Analyse von Produktionsschwankungen, thematischen Schwerpunkten und aussergewöhnlich hohen oder niedrigen Artikelmengen.</p></section>
-<section v-if="monitorIndex === 4" class="doc-copy"><h4>Artikelklassifizierung und Inhaltsanalyse</h4>
+<section data-chapter class="doc-copy"><h4>Artikelklassifizierung und Inhaltsanalyse</h4><img class="chapter-shot" loading="lazy" draggable="false" @contextmenu.prevent :src="monitoringImages[4].image" :alt="monitoringImages[4].title">
 <p>Dieser Bereich erweitert die Artikelproduktionsanalyse durch verschiedene Kreis- beziehungsweise Donut-Diagramme.</p>
 <p>Die Diagramme zeigen die Verteilung der Artikel nach unterschiedlichen Metadaten und Klassifizierungsmerkmalen.</p>
 <h5>Sentiment</h5>
@@ -240,14 +246,14 @@ onMounted(() => {
 <h5>Inland / Ausland</h5>
 <p>Dieses Diagramm zeigt das Verhältnis zwischen nationalen und internationalen Nachrichten.</p>
 <p>Die verschiedenen Auswertungen ermöglichen eine detaillierte Analyse der inhaltlichen Zusammensetzung der Artikelproduktion.</p></section>
-<section v-if="monitorIndex === 5" class="doc-copy"><h4>Channels by Language – Themenverteilung nach Sprache</h4>
+<section data-chapter class="doc-copy"><h4>Channels by Language – Themenverteilung nach Sprache</h4><img class="chapter-shot" loading="lazy" draggable="false" @contextmenu.prevent :src="monitoringImages[5].image" :alt="monitoringImages[5].title">
 <p>Das Diagramm Channels by Language zeigt die Verteilung der Nachrichtenartikel auf verschiedene Themenbereiche, aufgeschlüsselt nach Sprache.</p>
 <p>Auf der horizontalen Achse befinden sich die einzelnen Themenkategorien, beispielsweise Politik, Sport, Wirtschaft und Finanzen sowie Katastrophen und Unfälle.</p>
 <p>Die vertikale Achse zeigt die Anzahl der Artikel.</p>
 <p>Für jede Kategorie werden die Sprachen Deutsch, Französisch und Italienisch farblich unterschieden dargestellt.</p>
 <p>Durch die gestapelten Balken können Benutzer sowohl die Gesamtmenge der Artikel innerhalb eines Themenbereichs als auch deren sprachliche Verteilung vergleichen.</p>
 <p>Diese Funktion hilft dabei, Unterschiede zwischen den Sprachregionen zu erkennen und thematische Schwerpunkte innerhalb der Nachrichtenproduktion zu analysieren.</p></section>
-<section v-if="monitorIndex === 6" class="doc-copy"><h4>Image Usage – Bildnutzungsanalyse</h4>
+<section data-chapter class="doc-copy"><h4>Image Usage – Bildnutzungsanalyse</h4><img class="chapter-shot" loading="lazy" draggable="false" @contextmenu.prevent :src="monitoringImages[6].image" :alt="monitoringImages[6].title">
 <p>Der Bereich Image Usage dient der Analyse der Nutzung von Bildmaterial durch Publisher.</p>
 <p>Die Seite ermöglicht es, die Verwendung einzelner Bilder über einen bestimmten Zeitraum zu untersuchen.</p>
 <h5>Filtermöglichkeiten</h5>
@@ -263,7 +269,7 @@ onMounted(() => {
 <h5>By Topic</h5>
 <p>Die Auswertung By Topic zeigt, wie sich die Bildnutzung auf verschiedene Themenbereiche verteilt.</p>
 <p>Die Bildnutzungsanalyse unterstützt dabei, häufig verwendetes Bildmaterial zu identifizieren und Nutzungsmuster der Publisher auszuwerten.</p></section>
-<section v-if="monitorIndex === 7" class="doc-copy"><h4>Publishers – Publisher-Verwaltung und Übersicht</h4>
+<section data-chapter class="doc-copy"><h4>Publishers – Publisher-Verwaltung und Übersicht</h4><img class="chapter-shot" loading="lazy" draggable="false" @contextmenu.prevent :src="monitoringImages[7].image" :alt="monitoringImages[7].title">
 <p>Der Bereich Publishers stellt eine zentrale Übersicht über die erfassten Publisher und Publisher-Gruppen zur Verfügung.</p>
 <p>Die Tabelle zeigt wichtige Informationen über die Aktivitäten und die Nutzung der Nachrichteninhalte.</p>
 <h5>Such- und Filterfunktionen</h5>
@@ -275,7 +281,7 @@ onMounted(() => {
 <p>Die Publisher können anhand der dargestellten Kennzahlen miteinander verglichen werden.</p>
 <p>Neben einzelnen Publishern können auch Publisher-Gruppen betrachtet werden.</p>
 <p>Dadurch eignet sich dieser Bereich zur Analyse der Kundenaktivität und zur Identifikation besonders aktiver Publisher.</p></section>
-<section v-if="monitorIndex === 8" class="doc-copy"><h4>Top 50 Articles und Unused Articles</h4>
+<section data-chapter class="doc-copy"><h4>Top 50 Articles und Unused Articles</h4><img class="chapter-shot" loading="lazy" draggable="false" @contextmenu.prevent :src="monitoringImages[8].image" :alt="monitoringImages[8].title">
 <p>Dieser Bereich stellt zwei wichtige Auswertungen gegenüber: die am häufigsten genutzten Artikel und die Artikel ohne registrierte Nutzung.</p>
 <h5>Top 50 Articles</h5>
 <p>Die Tabelle Top 50 Articles zeigt die 50 Artikel mit den höchsten Nutzungszahlen.</p>
@@ -288,7 +294,7 @@ onMounted(() => {
 <p>Zu jedem Artikel werden der Titel, der Nachrichtendienst, die Sprache, der Themenbereich und das Datum dargestellt.</p>
 <p>Diese Funktion unterstützt die Analyse von nicht verwendeten Nachrichteninhalten.</p>
 <p>Durch die Gegenüberstellung beider Tabellen können Unterschiede zwischen häufig genutzten und nicht genutzten Artikeln untersucht werden.</p></section>
-<section v-if="monitorIndex === 9" class="doc-copy"><h4>Usage Timeline – Nutzungsverlauf und Publisher-Vergleich</h4>
+<section data-chapter class="doc-copy"><h4>Usage Timeline – Nutzungsverlauf und Publisher-Vergleich</h4><img class="chapter-shot" loading="lazy" draggable="false" @contextmenu.prevent :src="monitoringImages[9].image" :alt="monitoringImages[9].title">
 <p>Der Bereich Usage Timeline visualisiert die Nutzung von Nachrichtenartikeln durch ausgewählte Publisher über einen bestimmten Zeitraum.</p>
 <h5>Usage Timeline</h5>
 <p>Das Balkendiagramm stellt die tägliche Artikelverwendung dar.</p>
@@ -307,7 +313,7 @@ onMounted(() => {
 <p>Die Tabelle Selected Publishers zeigt die für den Vergleich ausgewählten Publisher und Gruppen.</p>
 <p>Für jeden Publisher werden die gesamte Nutzung sowie die Aufteilung zwischen Online- und Print-Nutzungen angezeigt.</p>
 <p>Die Kombination dieser Funktionen ermöglicht eine detaillierte Analyse der Publisher-Aktivität und des zeitlichen Nutzungsverhaltens.</p></section>
-<section v-if="monitorIndex === 10" class="doc-copy"><h4>Alerts – Warnmeldungen und Monitoring</h4>
+<section data-chapter class="doc-copy"><h4>Alerts – Warnmeldungen und Monitoring</h4><img class="chapter-shot" loading="lazy" draggable="false" @contextmenu.prevent :src="monitoringImages[10].image" :alt="monitoringImages[10].title">
 <p>Der Bereich Alerts dient zur Überwachung auffälliger Veränderungen in der Nutzung von Nachrichteninhalten durch Publisher.</p>
 <p>Das System stellt Warnmeldungen bereit, die auf relevante Veränderungen im Nutzungsverhalten hinweisen.</p>
 <h5>Übersicht der Warnmeldungen</h5>
@@ -331,39 +337,34 @@ onMounted(() => {
     </dialog>
     <dialog ref="dialog" class="ecocharge-details" id="ecocharge-details" aria-labelledby="ecocharge-title" @close="restoreFocus" @cancel.prevent="closeProject" @click.self="closeProject">
       <header class="dialog-bar"><span>Projekte <b>/</b> EcoCharge</span><button aria-label="Projektansicht schliessen" type="button" autofocus @click="closeProject">×</button></header>
-      <div class="screen-list" role="group" aria-label="App-Ansicht auswählen">
-            <button v-for="(screen, i) in screens" :key="screen.title" type="button"
-              :aria-pressed="active === i" aria-controls="screen-preview" @click="selectScreen(i)">
-              {{ screen.title }}
-            </button>
-          </div>
-      <div class="case-layout" :class="{ cover: active === 0 }">
+      <nav class="chapter-nav" aria-label="EcoCharge-Kapitel"><button type="button" v-for="(item,i) in screens" :key="item.title" :aria-current="(active === i) ? 'location' : undefined" @click="jump($event,i)">{{ item.title }}</button></nav><div class="doc-scroll" @scroll.passive="sync($event,true)"><section data-chapter v-for="(screen,i) in screens" :key="screen.title" class="case-layout" :class="{ cover: i === 0 }">
         <div class="case-copy">
-          <p class="case-label">SMART CHARGING · PWA</p>
-          <h3 id="ecocharge-title">EcoCharge</h3>
-          <div :key="active" class="pane-enter">
-            <h4 class="case-lead">{{ screens[active].heading || screens[active].title }}</h4>
-            <p class="case-description">{{ screens[active].text }}</p>
-            <div class="project-tools" v-if="active === 0"><strong>Technologien &amp; Tools</strong><ul><li v-for="tool in technologies" :key="tool">{{ tool }}</li></ul></div>
+          <p v-if="i === 0" class="case-label">SMART CHARGING · PWA</p>
+          <h3 v-if="i === 0" id="ecocharge-title">EcoCharge</h3>
+          <div>
+            <h4 class="case-lead">{{ screen.heading || screen.title }}</h4>
+            <p class="case-description">{{ screen.text }}</p>
+            <div class="project-tools" v-if="i === 0"><strong>Technologien &amp; Tools</strong><ul><li v-for="tool in technologies" :key="tool">{{ tool }}</li></ul></div>
           </div>
-          <div class="resource-links"><a href="https://ecocharge.free.nf/login.php" target="_blank" rel="noopener noreferrer">Live-Demo ↗</a><a href="https://showroom-bcs.digisus-lab.ch/ecocharge-smartes-laden-fur-dein-elektroauto/" target="_blank" rel="noopener noreferrer">Dokumentation ↗</a></div>
+          <div v-if="i === 0" class="resource-links"><a href="https://ecocharge.free.nf/login.php" target="_blank" rel="noopener noreferrer">Live-Demo ↗</a><a href="https://showroom-bcs.digisus-lab.ch/ecocharge-smartes-laden-fur-dein-elektroauto/" target="_blank" rel="noopener noreferrer">Dokumentation ↗</a></div>
         </div>
-        <figure id="screen-preview" class="screen-preview">
+        <figure class="screen-preview">
           <div class="screen-stage" @contextmenu.prevent>
             <Transition name="picture">
-              <img draggable="false" :key="screens[active].images[slide]" :src="screens[active].images[slide]" :alt="'EcoCharge – ' + screens[active].title + ', Bild ' + (slide + 1)">
+              <img draggable="false" :key="screen.images[active === i ? slide : 0]" :src="screen.images[active === i ? slide : 0]" :alt="'EcoCharge – ' + screen.title + ', Bild ' + ((active === i ? slide : 0) + 1)">
             </Transition>
           </div>
-          <figcaption v-if="screens[active].images.length > 1">
-            <div v-if="screens[active].images.length > 1" class="gallery-controls">
-              <button class="arrow" type="button" aria-label="Vorheriges Bild" @click="step(-1)">‹</button>
-              <span>{{ slide + 1 }} / {{ screens[active].images.length }}</span>
-              <button class="arrow" type="button" aria-label="Nächstes Bild" @click="step(1)">›</button>
+          <figcaption v-if="screen.images.length > 1">
+            <div v-if="screen.images.length > 1" class="gallery-controls">
+              <button class="arrow" type="button" aria-label="Vorheriges Bild" @click="active !== i && selectScreen(i); step(-1)">‹</button>
+              <span>{{ (active === i ? slide : 0) + 1 }} / {{ screen.images.length }}</span>
+              <button class="arrow" type="button" aria-label="Nächstes Bild" @click="active !== i && selectScreen(i); step(1)">›</button>
             </div>
           </figcaption>
         </figure>
-      </div>
-    </dialog>
+      </section>
+</div>
+</dialog>
   </section>
 </template>
 
@@ -487,4 +488,20 @@ onMounted(() => {
 .doc-copy ul { padding-left:20px; }
 .doc-copy table { border-collapse:collapse; width:100%; }
 .doc-copy td,.doc-copy th { text-align:left; vertical-align:top; border-bottom:1px solid #415248; padding:6px; }
+
+.ecocharge-details[open] { display:grid; grid-template-rows:auto auto minmax(0,1fr); height:min(820px,90dvh); overflow:hidden; }
+.doc-scroll { overflow-y:auto; overscroll-behavior:contain; min-height:0; }
+.chapter-nav { display:flex; overflow-x:auto; gap:14px; padding:0 20px; border-block:1px solid #34403b; background:#14211d; }
+.chapter-nav button { flex:none; background:none; border:0; border-bottom:2px solid transparent; color:#c5d1cb; font:inherit; font-size:14px; padding:12px 2px; cursor:pointer; }
+.chapter-nav button[aria-current] { border-color:#a6d9b7; color:#dcf5e4; }
+.chapter-shot { display:block; width:100%; height:auto; margin:16px 0; border-radius:8px; }
+.doc-copy { max-width:none; padding-block:20px; margin:0; }
+.doc-copy p,.doc-copy ul,.doc-copy table { max-width:72ch; }
+.doc-scroll [data-chapter] + [data-chapter] { border-top:1px solid #35433c; }
+@media(min-width:901px) {
+ .projects-grid .project-card { display:grid; grid-row:span 6; grid-template-rows:subgrid; row-gap:0; }
+ .projects-grid .project-content { display:grid; grid-row:span 5; grid-template-rows:subgrid; row-gap:0; }
+ .projects-grid .project-content > * { align-self:start; }
+ .projects-grid .project-actions { margin-top:0; }
+}
 </style>
