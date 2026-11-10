@@ -16,11 +16,28 @@ const screens = [
   { title: "Fahrzeug", images: [vehicleSelection], text: "Das ausgewählte Fahrzeug liefert den Batteriestand für die Ladeplanung." },
   { title: "Einstellungen", images: [settings], text: "Im Einstellungsbereich lassen sich verschiedene Angaben individuell anpassen. Dazu gehören beispielsweise die gewünschten Ladebedingungen, die technischen Eigenschaften der Ladestation, Informationen zur Solaranlage sowie die Daten des Elektrofahrzeugs." }
 ];
-const monitoringAssets = import.meta.glob("../../assets/images/**/*.{png,jpg,jpeg,webp,avif,PNG,JPG,JPEG,WEBP}", { eager: true, import: "default", query: "?url" });
-const monitoringImages = Object.entries(monitoringAssets)
-  .filter(([path]) => /monitoring/i.test(path))
-  .sort(([a], [b]) => a.localeCompare(b, "de", { numeric: true }))
-  .map(([, url]) => url);
+import monitorShot0 from "../../assets/images/monitoring_ksda/overview1.png";
+import monitorShot1 from "../../assets/images/monitoring_ksda/article_production.png";
+import monitorShot2 from "../../assets/images/monitoring_ksda/article_production2.png";
+import monitorShot3 from "../../assets/images/monitoring_ksda/channels_by_language.png";
+import monitorShot4 from "../../assets/images/monitoring_ksda/publisher.png";
+import monitorShot5 from "../../assets/images/monitoring_ksda/usage_timeline.png";
+import monitorShot6 from "../../assets/images/monitoring_ksda/image_usage.png";
+import monitorShot7 from "../../assets/images/monitoring_ksda/top50_00.png";
+import monitorShot8 from "../../assets/images/monitoring_ksda/alerts.png";
+import monitorShot9 from "../../assets/images/monitoring_ksda/login_page_monitoringksda.png";
+const monitoringImages = [
+  { image: monitorShot0, title: "Dashboard", group: "Überblick" },
+  { image: monitorShot1, title: "Artikelproduktion", group: "Produktion" },
+  { image: monitorShot2, title: "Artikelproduktion im Detail", group: "Produktion" },
+  { image: monitorShot3, title: "Kanäle nach Sprache", group: "Produktion" },
+  { image: monitorShot4, title: "Publisher", group: "Nutzung" },
+  { image: monitorShot5, title: "Nutzung im Zeitverlauf", group: "Nutzung" },
+  { image: monitorShot6, title: "Bildnutzung", group: "Nutzung" },
+  { image: monitorShot7, title: "Top 50", group: "Nutzung" },
+  { image: monitorShot8, title: "Benachrichtigungen", group: "System" },
+  { image: monitorShot9, title: "Anmeldung", group: "System" },
+];
 const monitorDialog = ref(null);
 const monitorIndex = ref(0);
 function openMonitoring() {
@@ -131,10 +148,9 @@ onMounted(() => {
 
       <article class="project-card monitoring-card" @click="!$event.target.closest('button') && openMonitoring()">
         <div class="project-image monitor-cover">
-          <img v-if="monitoringImages.length" :src="monitoringImages[0]" alt="Vorschau des Monitoring-Projekts">
-          <svg v-else aria-hidden="true" viewBox="0 0 360 120"><path d="M0 65H66l12-10 13 12h38l16-29 17 54 19-76 17 65 16-17h41l12-10 11 10h82" /></svg>
+          <img :src="monitoringImages[0].image" alt="Übersicht des Monitoring-Dashboards" draggable="false" @contextmenu.prevent>
         </div>
-        <div class="project-content"><h3>Monitoring</h3>
+        <div class="project-content"><p class="meta">DATENANALYSE · DASHBOARD</p><h3>Monitoring</h3><p>Artikelproduktion, Publisher und Bildnutzung im Überblick.</p>
           <button class="project-link open-project" type="button" aria-haspopup="dialog" @click="openMonitoring">Projekt ansehen →</button>
         </div>
       </article>
@@ -142,16 +158,27 @@ onMounted(() => {
 
     <dialog ref="monitorDialog" class="ecocharge-details monitor-dialog" aria-labelledby="monitor-title" @click.self="monitorDialog.close()">
       <header class="dialog-bar"><span>Projekte / Monitoring</span><button type="button" aria-label="Projektansicht schliessen" @click="monitorDialog.close()">×</button></header>
-      <div class="monitor-body"><h3 id="monitor-title">Monitoring</h3>
-        <template v-if="monitoringImages.length">
-          <img class="monitor-shot" draggable="false" @contextmenu.prevent :src="monitoringImages[monitorIndex]" :alt="'Monitoring – Screenshot ' + (monitorIndex + 1)">
-          <div v-if="monitoringImages.length > 1" class="gallery-controls">
-            <button class="arrow" type="button" aria-label="Vorheriges Bild" @click="monitorIndex = (monitorIndex + monitoringImages.length - 1) % monitoringImages.length">‹</button>
-            <span>{{ monitorIndex + 1 }} / {{ monitoringImages.length }}</span>
-            <button class="arrow" type="button" aria-label="Nächstes Bild" @click="monitorIndex = (monitorIndex + 1) % monitoringImages.length">›</button>
+      <div class="monitor-body">
+        <p class="case-label">DATENANALYSE / MONITORING</p>
+        <h3 id="monitor-title">Monitoring-Dashboard</h3>
+        <p>Von der Artikelproduktion bis zur Bildnutzung: Wähle eine Ansicht oder blättere durch das Projekt.</p>
+        <label class="monitor-select">Ansicht
+          <select v-model.number="monitorIndex">
+            <option v-for="(shot, i) in monitoringImages" :key="shot.image" :value="i">{{ shot.group }} · {{ shot.title }}</option>
+          </select>
+        </label>
+        <figure class="monitor-figure">
+          <div class="monitor-stage" @contextmenu.prevent>
+            <Transition name="picture"><img :key="monitorIndex" class="monitor-shot" draggable="false" :src="monitoringImages[monitorIndex].image" :alt="'Monitoring: ' + monitoringImages[monitorIndex].title"></Transition>
           </div>
-        </template>
-        <p v-else>Die Screenshots zum Monitoring-Projekt folgen.</p>
+          <figcaption class="monitor-caption"><strong>{{ monitoringImages[monitorIndex].title }}</strong>
+            <div class="gallery-controls">
+              <button class="arrow" type="button" aria-label="Vorheriges Bild" @click="monitorIndex = (monitorIndex + monitoringImages.length - 1) % monitoringImages.length">‹</button>
+              <span>{{ monitorIndex + 1 }} / {{ monitoringImages.length }}</span>
+              <button class="arrow" type="button" aria-label="Nächstes Bild" @click="monitorIndex = (monitorIndex + 1) % monitoringImages.length">›</button>
+            </div>
+          </figcaption>
+        </figure>
       </div>
     </dialog>
     <dialog ref="dialog" class="ecocharge-details" id="ecocharge-details" aria-labelledby="ecocharge-title" @close="restoreFocus" @cancel.prevent="closeProject" @click.self="closeProject">
@@ -275,12 +302,18 @@ onMounted(() => {
 .ecocharge-card { cursor: pointer; }
 .monitoring-card { cursor: pointer; }
 .monitor-cover { background: #15252b; display:grid; place-items:center; }
-.monitor-cover svg { width:72%; fill:none; stroke:#9ddbd0; stroke-width:2; }
+
 .monitor-cover img,.monitor-shot { width:100%; height:100%; object-fit:contain; }
 .monitor-body { padding:clamp(20px,4vw,42px); }
 .monitor-body h3 { font-size:2rem; margin:0 0 16px; }
 .monitor-shot { display:block; max-height:60vh; }
-.monitor-body .gallery-controls { justify-content:center; margin-top:12px; }
+.monitor-select { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:18px 0; }
+.monitor-select select { font:inherit; max-width:100%; padding:7px 10px; border-radius:6px; }
+.monitor-figure { margin:0; }
+.monitor-stage { display:grid; grid-template: minmax(0,1fr) / minmax(0,1fr); place-items:center; aspect-ratio:16/10; max-height:55vh; overflow:hidden; background:#243431; border:1px solid #40524b; border-radius:10px; }
+.monitor-stage img { grid-area:1/1; min-height:0; max-height:100%; object-fit:contain; }
+.monitor-caption { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:10px; }
+.monitor-caption .gallery-controls { margin:0; }
 .monitoring-card .project-content { flex: none; }
 .resource-links { display: flex; flex-wrap: wrap; gap: 16px; margin-block: 18px; }
 .arrow { display:grid; place-items:center; width:36px; height:36px; border-radius:50%; border:1px solid #496052; background:#1c2c24; color:#def2e4; font:22px/1 system-ui; cursor:pointer; }
