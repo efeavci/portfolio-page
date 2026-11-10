@@ -26,17 +26,20 @@ import monitorShot6 from "../../assets/images/monitoring_ksda/image_usage.png";
 import monitorShot7 from "../../assets/images/monitoring_ksda/top50_00.png";
 import monitorShot8 from "../../assets/images/monitoring_ksda/alerts.png";
 import monitorShot9 from "../../assets/images/monitoring_ksda/login_page_monitoringksda.png";
+import monitorCover from "../../assets/images/monitoring_ksda/title_picture.jpg";
+const monitorTools = ["Django / Python", "HTML", "CSS", "JavaScript", "MySQL", "PostgreSQL", "Claude"];
 const monitoringImages = [
-  { image: monitorShot0, title: "Dashboard", group: "Überblick" },
-  { image: monitorShot1, title: "Artikelproduktion", group: "Produktion" },
-  { image: monitorShot2, title: "Artikelproduktion im Detail", group: "Produktion" },
-  { image: monitorShot3, title: "Kanäle nach Sprache", group: "Produktion" },
-  { image: monitorShot4, title: "Publisher", group: "Nutzung" },
-  { image: monitorShot5, title: "Nutzung im Zeitverlauf", group: "Nutzung" },
-  { image: monitorShot6, title: "Bildnutzung", group: "Nutzung" },
-  { image: monitorShot7, title: "Top 50", group: "Nutzung" },
-  { image: monitorShot8, title: "Benachrichtigungen", group: "System" },
-  { image: monitorShot9, title: "Anmeldung", group: "System" },
+  { image: monitorCover, title: "Einleitung" },
+  { image: monitorShot9, title: "Login und Authentifizierung" },
+  { image: monitorShot0, title: "Article Overview – Artikelübersicht" },
+  { image: monitorShot1, title: "Article Production – Artikelproduktion" },
+  { image: monitorShot2, title: "Artikelklassifizierung und Inhaltsanalyse" },
+  { image: monitorShot3, title: "Channels by Language – Themenverteilung nach Sprache" },
+  { image: monitorShot6, title: "Image Usage – Bildnutzungsanalyse" },
+  { image: monitorShot4, title: "Publishers – Publisher-Verwaltung und Übersicht" },
+  { image: monitorShot7, title: "Top 50 Articles und Unused Articles" },
+  { image: monitorShot5, title: "Usage Timeline – Nutzungsverlauf und Publisher-Vergleich" },
+  { image: monitorShot8, title: "Alerts – Warnmeldungen und Monitoring" }
 ];
 const monitorDialog = ref(null);
 const monitorIndex = ref(0);
@@ -148,7 +151,7 @@ onMounted(() => {
 
       <article class="project-card monitoring-card" @click="!$event.target.closest('button') && openMonitoring()">
         <div class="project-image monitor-cover">
-          <img :src="monitoringImages[0].image" alt="Übersicht des Monitoring-Dashboards" draggable="false" @contextmenu.prevent>
+          <img :src="monitorCover" alt="Titelbild des Keystone SDA Monitoring Dashboards" draggable="false" @contextmenu.prevent>
         </div>
         <div class="project-content"><p class="meta">DATENANALYSE · DASHBOARD</p><h3>Monitoring</h3><p>Artikelproduktion, Publisher und Bildnutzung im Überblick.</p>
           <button class="project-link open-project" type="button" aria-haspopup="dialog" @click="openMonitoring">Projekt ansehen →</button>
@@ -160,16 +163,16 @@ onMounted(() => {
       <header class="dialog-bar"><span>Projekte / Monitoring</span><button type="button" aria-label="Projektansicht schliessen" @click="monitorDialog.close()">×</button></header>
       <div class="monitor-body">
         <p class="case-label">DATENANALYSE / MONITORING</p>
-        <h3 id="monitor-title">Monitoring-Dashboard</h3>
-        <p><strong>Technologien und Tools:</strong> Django (Python), HTML, CSS, JavaScript, MySQL, PostgreSQL, XML und Claude.</p>
-        <p>Von der Artikelproduktion bis zur Bildnutzung: Wähle eine Ansicht oder blättere durch das Projekt.</p>
-        <label class="monitor-select">Ansicht
+        <h3 id="monitor-title">Keystone SDA Monitoring Dashboard</h3>
+        <div class="project-tools" ><strong>Technologien &amp; Tools</strong><ul><li v-for="tool in monitorTools" :key="tool">{{ tool }}</li></ul></div>
+        <p>Wähle ein Kapitel der Dokumentation oder blättere mit den Pfeilen weiter.</p>
+        <label class="monitor-select">Kapitel
           <select v-model.number="monitorIndex">
-            <option v-for="(shot, i) in monitoringImages" :key="shot.image" :value="i">{{ shot.group }} · {{ shot.title }}</option>
+            <option v-for="(shot, i) in monitoringImages" :key="shot.image" :value="i">{{ i + 1 }}. {{ shot.title }}</option>
           </select>
         </label>
         <figure class="monitor-figure">
-          <div class="monitor-stage" @contextmenu.prevent>
+          <div class="monitor-stage" :class="{ coverShot: monitorIndex === 0 }" @contextmenu.prevent>
             <Transition name="picture"><img :key="monitorIndex" class="monitor-shot" draggable="false" :src="monitoringImages[monitorIndex].image" :alt="'Monitoring: ' + monitoringImages[monitorIndex].title"></Transition>
           </div>
           <figcaption class="monitor-caption"><strong>{{ monitoringImages[monitorIndex].title }}</strong>
@@ -180,6 +183,150 @@ onMounted(() => {
             </div>
           </figcaption>
         </figure>
+<section v-if="monitorIndex === 0" class="doc-copy"><h4>Einleitung</h4>
+<p>Das Keystone SDA Monitoring Dashboard ist eine webbasierte Analyseplattform zur Überwachung und Auswertung von Nachrichtenartikeln, deren Nutzung durch Publisher sowie der Verwendung von Bildmaterial.</p>
+<p>Die Anwendung stellt verschiedene Kennzahlen, Diagramme und Tabellen zur Verfügung, um die Artikelproduktion, Nutzungsmuster und Aktivitäten einzelner Publisher transparent darzustellen.</p>
+<p>Das Dashboard ermöglicht es, Daten über unterschiedliche Zeiträume auszuwerten, gezielt nach Kriterien zu filtern und Veränderungen in der Nutzung zu erkennen.</p>
+<p>Die Benutzeroberfläche ist in mehrere Bereiche unterteilt: Article Overview, Article Usage, Unused Articles, Image Usage, Publishers und Alerts.</p></section>
+<section v-if="monitorIndex === 1" class="doc-copy"><h4>Login und Authentifizierung</h4>
+<p>Die Login-Seite bildet den Einstiegspunkt in die Keystone SDA Monitoring-Plattform.</p>
+<p>Benutzer können sich über zwei verschiedene Anmeldemethoden authentifizieren.</p>
+<p>Google-Anmeldung: Über die Google-Anmeldefunktion können sich Benutzer mit ihrem Google-Konto anmelden.</p>
+<p>Benutzername und Passwort: Alternativ steht eine klassische Anmeldung zur Verfügung, bei der die Benutzer ihre Zugangsdaten manuell eingeben.</p>
+<p>Nach erfolgreicher Authentifizierung erhalten Benutzer Zugriff auf die Monitoring- und Analysefunktionen entsprechend ihren Berechtigungen.</p></section>
+<section v-if="monitorIndex === 2" class="doc-copy"><h4>Article Overview – Artikelübersicht</h4>
+<p>Die Seite Article Overview bietet eine zentrale Übersicht über die Artikelproduktion und die Nutzung der bereitgestellten Nachrichteninhalte.</p>
+<p>Im oberen Bereich befindet sich eine Filtersektion, über die Benutzer den gewünschten Auswertungszeitraum sowie weitere Kriterien definieren können.</p>
+<h5>Filtermöglichkeiten</h5>
+<ul><li>Period: Auswahl zwischen Jahr, Monat, Woche und Tag.</li><li>Start Date / End Date: Manuelle Festlegung des Auswertungszeitraums.</li><li>Language: Filterung nach Sprache.</li><li>Published: Einschränkung nach Veröffentlichungsstatus.</li><li>Inland / Ausland: Unterscheidung zwischen nationalen und internationalen Nachrichten.</li><li>RTP: Filterung nach Ready-to-Publish-Kriterien.</li><li>Service: Auswahl einzelner Nachrichtendienste.</li><li>Channel: Filterung nach Themenkanälen.</li><li>Story Type: Auswahl verschiedener Artikeltypen.</li><li>Genre: Einschränkung nach journalistischen Inhaltskategorien.</li></ul>
+<h5>Kennzahlen</h5>
+<p>Unterhalb der Filter werden verschiedene Statistikfelder angezeigt.</p>
+<p>Total Articles: Zeigt die Gesamtanzahl aller Artikel im gewählten Zeitraum.</p>
+<p>Published: Gibt an, wie viele Artikel von Publishern verwendet beziehungsweise veröffentlicht wurden.</p>
+<p>Not Published: Zeigt die Anzahl der Artikel ohne registrierte Nutzung.</p>
+<p>No RTP: Zeigt die Anzahl der Artikel ohne Ready-to-Publish-Kennzeichnung.</p>
+<p>Zusätzlich werden prozentuale Veränderungen gegenüber einem Vergleichszeitraum dargestellt.</p>
+<p>Diese Kennzahlen ermöglichen eine schnelle Einschätzung der Artikelproduktion und der Nutzung durch Publisher.</p></section>
+<section v-if="monitorIndex === 3" class="doc-copy"><h4>Article Production – Artikelproduktion</h4>
+<p>Der Bereich Article Production visualisiert die tägliche Artikelproduktion anhand eines gestapelten Balkendiagramms.</p>
+<p>Die horizontale Achse zeigt die einzelnen Tage des ausgewählten Zeitraums. Die vertikale Achse stellt die Anzahl produzierter Artikel dar.</p>
+<p>Jeder Balken repräsentiert die gesamte Artikelproduktion eines Tages und ist in verschiedene Themenbereiche unterteilt.</p>
+<p>Dazu gehören beispielsweise Politik, Sport, Wirtschaft und Finanzen, Katastrophen und Unfälle, Justiz und Kriminalität sowie weitere Nachrichtenkategorien.</p>
+<p>Jeder Themenbereich wird durch eine eigene Farbe dargestellt.</p>
+<p>Dadurch lässt sich erkennen, wie sich die tägliche Artikelproduktion auf die verschiedenen Themen verteilt.</p>
+<p>Das Diagramm unterstützt insbesondere die Analyse von Produktionsschwankungen, thematischen Schwerpunkten und aussergewöhnlich hohen oder niedrigen Artikelmengen.</p></section>
+<section v-if="monitorIndex === 4" class="doc-copy"><h4>Artikelklassifizierung und Inhaltsanalyse</h4>
+<p>Dieser Bereich erweitert die Artikelproduktionsanalyse durch verschiedene Kreis- beziehungsweise Donut-Diagramme.</p>
+<p>Die Diagramme zeigen die Verteilung der Artikel nach unterschiedlichen Metadaten und Klassifizierungsmerkmalen.</p>
+<h5>Sentiment</h5>
+<p>Das Sentiment-Diagramm zeigt die emotionale Einordnung der Nachrichtenartikel.</p>
+<p>Die Inhalte werden beispielsweise in Neutral, Negative, Positive und Critical unterteilt.</p>
+<p>Dadurch lässt sich erkennen, welche Stimmungen innerhalb der produzierten Nachrichten dominieren.</p>
+<h5>Language</h5>
+<p>Das Sprachdiagramm stellt die Verteilung der Artikel auf die verschiedenen Sprachen dar.</p>
+<p>Im gezeigten Beispiel werden Deutsch, Französisch und Italienisch berücksichtigt.</p>
+<p>Diese Darstellung ermöglicht eine Analyse der sprachlichen Verteilung der Nachrichtenproduktion.</p>
+<h5>Story Type</h5>
+<p>Das Diagramm Story Type zeigt die Verteilung unterschiedlicher Nachrichtenformate.</p>
+<p>Dazu gehören beispielsweise Einzelmeldungen, Auftakte, Zusammenfassungen, Bulletins und Tagesprogramme.</p>
+<h5>Genre</h5>
+<p>Das Genre-Diagramm zeigt die journalistische Einordnung der Inhalte.</p>
+<p>Beispiele sind Nachrichten, Programme, Resultate, Interviews, Reportagen und Hintergrundberichte.</p>
+<h5>Channel</h5>
+<p>Das Channel-Diagramm visualisiert die Verteilung der Nachrichten nach Themenbereichen wie Politik, Sport, Wirtschaft oder Unterhaltung.</p>
+<h5>User Needs</h5>
+<p>Das Diagramm User Needs stellt dar, welche Informationsbedürfnisse durch die Nachrichteninhalte angesprochen werden.</p>
+<p>Beispielsweise werden Inhalte den Kategorien Inform Me, Give Me Background, Touch Me und Guide Me zugeordnet.</p>
+<h5>Inland / Ausland</h5>
+<p>Dieses Diagramm zeigt das Verhältnis zwischen nationalen und internationalen Nachrichten.</p>
+<p>Die verschiedenen Auswertungen ermöglichen eine detaillierte Analyse der inhaltlichen Zusammensetzung der Artikelproduktion.</p></section>
+<section v-if="monitorIndex === 5" class="doc-copy"><h4>Channels by Language – Themenverteilung nach Sprache</h4>
+<p>Das Diagramm Channels by Language zeigt die Verteilung der Nachrichtenartikel auf verschiedene Themenbereiche, aufgeschlüsselt nach Sprache.</p>
+<p>Auf der horizontalen Achse befinden sich die einzelnen Themenkategorien, beispielsweise Politik, Sport, Wirtschaft und Finanzen sowie Katastrophen und Unfälle.</p>
+<p>Die vertikale Achse zeigt die Anzahl der Artikel.</p>
+<p>Für jede Kategorie werden die Sprachen Deutsch, Französisch und Italienisch farblich unterschieden dargestellt.</p>
+<p>Durch die gestapelten Balken können Benutzer sowohl die Gesamtmenge der Artikel innerhalb eines Themenbereichs als auch deren sprachliche Verteilung vergleichen.</p>
+<p>Diese Funktion hilft dabei, Unterschiede zwischen den Sprachregionen zu erkennen und thematische Schwerpunkte innerhalb der Nachrichtenproduktion zu analysieren.</p></section>
+<section v-if="monitorIndex === 6" class="doc-copy"><h4>Image Usage – Bildnutzungsanalyse</h4>
+<p>Der Bereich Image Usage dient der Analyse der Nutzung von Bildmaterial durch Publisher.</p>
+<p>Die Seite ermöglicht es, die Verwendung einzelner Bilder über einen bestimmten Zeitraum zu untersuchen.</p>
+<h5>Filtermöglichkeiten</h5>
+<p>Benutzer können den Auswertungszeitraum über die Optionen Jahr, Monat, Woche oder Tag festlegen.</p>
+<p>Alternativ können ein Start- und Enddatum manuell ausgewählt werden.</p>
+<p>Weitere Filter ermöglichen die Einschränkung nach Publishern beziehungsweise Publisher-Gruppen, Match Scores, Themenbereichen, Kundenstatus und Schweizer Publishern.</p>
+<h5>Top 50 Used Images</h5>
+<p>Die Tabelle Top 50 Used Images zeigt die am häufigsten verwendeten Bilder.</p>
+<p>Zu jedem Eintrag werden folgende Informationen dargestellt:</p>
+<ul><li>Image: Vorschau des jeweiligen Bildes.</li><li>ID: Eindeutige Bildkennung.</li><li>Topic: Zugeordneter Themenbereich.</li><li>Publisher: Publisher, bei dem die Nutzung registriert wurde.</li><li>Usages: Anzahl der erfassten Bildverwendungen.</li></ul>
+<h5>Daily Average Benchmark</h5>
+<p>Dieser Bereich ermöglicht den Vergleich der durchschnittlichen täglichen Bildnutzung mit einem Referenzwert.</p>
+<h5>By Topic</h5>
+<p>Die Auswertung By Topic zeigt, wie sich die Bildnutzung auf verschiedene Themenbereiche verteilt.</p>
+<p>Die Bildnutzungsanalyse unterstützt dabei, häufig verwendetes Bildmaterial zu identifizieren und Nutzungsmuster der Publisher auszuwerten.</p></section>
+<section v-if="monitorIndex === 7" class="doc-copy"><h4>Publishers – Publisher-Verwaltung und Übersicht</h4>
+<p>Der Bereich Publishers stellt eine zentrale Übersicht über die erfassten Publisher und Publisher-Gruppen zur Verfügung.</p>
+<p>Die Tabelle zeigt wichtige Informationen über die Aktivitäten und die Nutzung der Nachrichteninhalte.</p>
+<h5>Such- und Filterfunktionen</h5>
+<p>Über die Suchfunktion können Publisher anhand ihres Namens oder ihrer Domain gefunden werden.</p>
+<p>Zusätzlich stehen Filter für den Kundenstatus, RTP und Schweizer Publisher zur Verfügung.</p>
+<h5>Publisher-Tabelle</h5>
+<p>Die Tabelle enthält folgende Informationen:</p>
+<table><thead><tr><th>Spalte</th><th>Beschreibung</th></tr></thead><tbody><tr><td>Publisher</td><td>Name des Publishers</td></tr><tr><td>Domain</td><td>Zugehörige Internetdomain</td></tr><tr><td>Customer</td><td>Kennzeichnung des Kundenstatus</td></tr><tr><td>Online</td><td>Anzahl der Online-Nutzungen</td></tr><tr><td>Print</td><td>Anzahl der Print-Nutzungen</td></tr><tr><td>Images</td><td>Anzahl der Bildnutzungen</td></tr><tr><td>Unique Stories</td><td>Anzahl unterschiedlicher Nachrichtenartikel</td></tr><tr><td>Last Seen</td><td>Datum der zuletzt erfassten Aktivität</td></tr><tr><td>Total</td><td>Gesamtzahl der ausgewiesenen Nutzungen</td></tr></tbody></table>
+<p>Die Publisher können anhand der dargestellten Kennzahlen miteinander verglichen werden.</p>
+<p>Neben einzelnen Publishern können auch Publisher-Gruppen betrachtet werden.</p>
+<p>Dadurch eignet sich dieser Bereich zur Analyse der Kundenaktivität und zur Identifikation besonders aktiver Publisher.</p></section>
+<section v-if="monitorIndex === 8" class="doc-copy"><h4>Top 50 Articles und Unused Articles</h4>
+<p>Dieser Bereich stellt zwei wichtige Auswertungen gegenüber: die am häufigsten genutzten Artikel und die Artikel ohne registrierte Nutzung.</p>
+<h5>Top 50 Articles</h5>
+<p>Die Tabelle Top 50 Articles zeigt die 50 Artikel mit den höchsten Nutzungszahlen.</p>
+<p>Zu jedem Artikel werden der Titel, die Anzahl der Verwendungen sowie zusätzliche Metadaten angezeigt.</p>
+<p>Zu diesen Metadaten gehören beispielsweise der zugehörige Nachrichtendienst, die Sprache und der Themenbereich.</p>
+<p>Die Artikel werden nach der Anzahl ihrer Nutzungen sortiert.</p>
+<p>Dadurch lassen sich besonders erfolgreiche beziehungsweise häufig verwendete Nachrichten identifizieren.</p>
+<h5>Articles not used</h5>
+<p>Die Tabelle Articles not used zeigt Artikel, für die keine Nutzung registriert wurde.</p>
+<p>Zu jedem Artikel werden der Titel, der Nachrichtendienst, die Sprache, der Themenbereich und das Datum dargestellt.</p>
+<p>Diese Funktion unterstützt die Analyse von nicht verwendeten Nachrichteninhalten.</p>
+<p>Durch die Gegenüberstellung beider Tabellen können Unterschiede zwischen häufig genutzten und nicht genutzten Artikeln untersucht werden.</p></section>
+<section v-if="monitorIndex === 9" class="doc-copy"><h4>Usage Timeline – Nutzungsverlauf und Publisher-Vergleich</h4>
+<p>Der Bereich Usage Timeline visualisiert die Nutzung von Nachrichtenartikeln durch ausgewählte Publisher über einen bestimmten Zeitraum.</p>
+<h5>Usage Timeline</h5>
+<p>Das Balkendiagramm stellt die tägliche Artikelverwendung dar.</p>
+<p>Die horizontale Achse zeigt die einzelnen Tage, während die vertikale Achse die Anzahl der Nutzungen darstellt.</p>
+<p>Jeder Publisher wird durch eine eigene Farbe gekennzeichnet.</p>
+<p>Die Darstellung ermöglicht einen direkten Vergleich der Nutzungsaktivität verschiedener Publisher.</p>
+<p>Zusätzlich können unterschiedliche Nutzungsstufen wie Max, High und Medium berücksichtigt werden.</p>
+<p>Die Legende unterscheidet zwischen aktuellen und vorherigen Vergleichswerten, wobei verblasste Balken den vorherigen und kräftige Balken den aktuellen Zeitraum repräsentieren.</p>
+<h5>Daily Average Benchmark</h5>
+<p>Dieser Bereich zeigt die durchschnittliche tägliche Nutzung ausgewählter Publisher im Vergleich zu einem globalen Durchschnitt.</p>
+<p>Dadurch kann die Aktivität einzelner Publisher besser eingeordnet werden.</p>
+<h5>By Service</h5>
+<p>Die Auswertung By Service zeigt, wie sich die Artikelverwendungen auf unterschiedliche Nachrichtendienste verteilen.</p>
+<p>Dabei können die Nutzungszahlen sowohl gesamthaft als auch für einzelne Publisher beziehungsweise Publisher-Gruppen betrachtet werden.</p>
+<h5>Selected Publishers</h5>
+<p>Die Tabelle Selected Publishers zeigt die für den Vergleich ausgewählten Publisher und Gruppen.</p>
+<p>Für jeden Publisher werden die gesamte Nutzung sowie die Aufteilung zwischen Online- und Print-Nutzungen angezeigt.</p>
+<p>Die Kombination dieser Funktionen ermöglicht eine detaillierte Analyse der Publisher-Aktivität und des zeitlichen Nutzungsverhaltens.</p></section>
+<section v-if="monitorIndex === 10" class="doc-copy"><h4>Alerts – Warnmeldungen und Monitoring</h4>
+<p>Der Bereich Alerts dient zur Überwachung auffälliger Veränderungen in der Nutzung von Nachrichteninhalten durch Publisher.</p>
+<p>Das System stellt Warnmeldungen bereit, die auf relevante Veränderungen im Nutzungsverhalten hinweisen.</p>
+<h5>Übersicht der Warnmeldungen</h5>
+<p>Im oberen Bereich werden drei zentrale Kennzahlen angezeigt.</p>
+<p>Open Alerts: Anzahl der aktuell offenen Warnmeldungen, die noch bearbeitet werden müssen.</p>
+<p>Resolved: Anzahl der Warnmeldungen, die bereits manuell als erledigt markiert wurden.</p>
+<p>Total Alerts: Gesamtanzahl aller offenen und erledigten Warnmeldungen.</p>
+<h5>Alert-Tabelle</h5>
+<p>Die Tabelle enthält folgende Informationen:</p>
+<table><thead><tr><th>Spalte</th><th>Beschreibung</th></tr></thead><tbody><tr><td>Publisher</td><td>Betroffener Publisher</td></tr><tr><td>Status</td><td>Aktueller Bearbeitungsstatus</td></tr><tr><td>Message</td><td>Beschreibung der erkannten Veränderung</td></tr><tr><td>Change</td><td>Prozentuale Veränderung der Nutzung</td></tr><tr><td>Created</td><td>Zeitpunkt der Erstellung</td></tr><tr><td>Resolved</td><td>Zeitpunkt der Erledigung</td></tr></tbody></table>
+<h5>Bearbeitung der Warnmeldungen</h5>
+<p>Warnmeldungen können nach ihrem Status gefiltert werden.</p>
+<p>Dabei stehen die Ansichten Open, Resolved und All zur Verfügung.</p>
+<p>Zusätzlich können die Meldungen nach bestimmten Regeln eingeschränkt werden.</p>
+<p>Über die verfügbaren Aktionen lassen sich offene Warnmeldungen als erledigt markieren, erledigte Meldungen wieder öffnen oder Einträge löschen.</p>
+<h5>Beispiel einer Warnmeldung</h5>
+<p>Wenn ein Publisher seine durchschnittliche wöchentliche Nutzung innerhalb von 13 Wochen von einem auf 62 Artikel steigert, entspricht dies einer Erhöhung um 6100 %.</p>
+<p>Eine solche Veränderung kann durch das Monitoring erkannt und als Warnmeldung angezeigt werden.</p>
+<p>Die Alert-Funktion hilft dabei, aussergewöhnliche Nutzungsveränderungen frühzeitig zu erkennen und gezielt zu überprüfen.</p></section>
       </div>
     </dialog>
     <dialog ref="dialog" class="ecocharge-details" id="ecocharge-details" aria-labelledby="ecocharge-title" @close="restoreFocus" @cancel.prevent="closeProject" @click.self="closeProject">
@@ -197,7 +344,7 @@ onMounted(() => {
           <div :key="active" class="pane-enter">
             <h4 class="case-lead">{{ screens[active].heading || screens[active].title }}</h4>
             <p class="case-description">{{ screens[active].text }}</p>
-            <p v-if="active === 0" class="stack">{{ technologies.join(' · ') }}</p>
+            <div class="project-tools" v-if="active === 0"><strong>Technologien &amp; Tools</strong><ul><li v-for="tool in technologies" :key="tool">{{ tool }}</li></ul></div>
           </div>
           <div class="resource-links"><a href="https://ecocharge.free.nf/login.php" target="_blank" rel="noopener noreferrer">Live-Demo ↗</a><a href="https://showroom-bcs.digisus-lab.ch/ecocharge-smartes-laden-fur-dein-elektroauto/" target="_blank" rel="noopener noreferrer">Dokumentation ↗</a></div>
         </div>
@@ -327,4 +474,17 @@ onMounted(() => {
   .picture-enter-active, .picture-leave-active { transition: none; }
   .pane-enter { animation: none; }
 }
+.monitor-cover img,.coverShot .monitor-shot { width:100%; height:100%; display:block; object-fit:cover; }
+.monitor-cover { padding:0; overflow:hidden; }
+.project-tools { margin:18px 0; padding:12px 16px; background:#1c3028; border-left:3px solid #99d6ac; border-radius:5px; }
+.project-tools strong { font-size:13px; color:#ddf3e4; }
+.project-tools ul { display:flex; flex-wrap:wrap; gap:6px; list-style:none; padding:0; margin:8px 0 0; }
+.project-tools li { padding:3px 9px; border-radius:5px; color:#e0f1e5; background:#304b3d; font-size:13px; }
+.doc-copy { max-width:72ch; margin-top:24px; line-height:1.65; overflow-wrap:anywhere; }
+.doc-copy h4 { font-size:1.4rem; }
+.doc-copy h5 { font-size:1.05rem; margin:20px 0 6px; }
+.doc-copy p,.doc-copy ul { margin:9px 0; }
+.doc-copy ul { padding-left:20px; }
+.doc-copy table { border-collapse:collapse; width:100%; }
+.doc-copy td,.doc-copy th { text-align:left; vertical-align:top; border-bottom:1px solid #415248; padding:6px; }
 </style>
