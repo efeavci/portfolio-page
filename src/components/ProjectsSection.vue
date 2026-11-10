@@ -16,6 +16,17 @@ const screens = [
   { title: "Fahrzeug", images: [vehicleSelection], text: "Das ausgewählte Fahrzeug liefert den Batteriestand für die Ladeplanung." },
   { title: "Einstellungen", images: [settings], text: "Im Einstellungsbereich lassen sich verschiedene Angaben individuell anpassen. Dazu gehören beispielsweise die gewünschten Ladebedingungen, die technischen Eigenschaften der Ladestation, Informationen zur Solaranlage sowie die Daten des Elektrofahrzeugs." }
 ];
+const monitoringAssets = import.meta.glob("../../assets/images/**/*.{png,jpg,jpeg,webp,avif,PNG,JPG,JPEG,WEBP}", { eager: true, import: "default", query: "?url" });
+const monitoringImages = Object.entries(monitoringAssets)
+  .filter(([path]) => /monitoring/i.test(path))
+  .sort(([a], [b]) => a.localeCompare(b, "de", { numeric: true }))
+  .map(([, url]) => url);
+const monitorDialog = ref(null);
+const monitorIndex = ref(0);
+function openMonitoring() {
+  monitorIndex.value = 0;
+  monitorDialog.value.showModal();
+}
 const technologies = ["PHP", "MySQL", "Smartcar", "Open-Meteo", "EKZ API", "PWA"];
 const slide = ref(0);
 let timer;
@@ -118,14 +129,31 @@ onMounted(() => {
         </div>
       </article>
 
-      <article class="project-card monitoring-card">
-        <div class="project-content">
-          <h3>Monitoring</h3>
-          <p>Projektdetails folgen.</p>
+      <article class="project-card monitoring-card" @click="!$event.target.closest('button') && openMonitoring()">
+        <div class="project-image monitor-cover">
+          <img v-if="monitoringImages.length" :src="monitoringImages[0]" alt="Vorschau des Monitoring-Projekts">
+          <svg v-else aria-hidden="true" viewBox="0 0 360 120"><path d="M0 65H66l12-10 13 12h38l16-29 17 54 19-76 17 65 16-17h41l12-10 11 10h82" /></svg>
+        </div>
+        <div class="project-content"><h3>Monitoring</h3>
+          <button class="project-link open-project" type="button" aria-haspopup="dialog" @click="openMonitoring">Projekt ansehen →</button>
         </div>
       </article>
     </div>
 
+    <dialog ref="monitorDialog" class="ecocharge-details monitor-dialog" aria-labelledby="monitor-title" @click.self="monitorDialog.close()">
+      <header class="dialog-bar"><span>Projekte / Monitoring</span><button type="button" aria-label="Projektansicht schliessen" @click="monitorDialog.close()">×</button></header>
+      <div class="monitor-body"><h3 id="monitor-title">Monitoring</h3>
+        <template v-if="monitoringImages.length">
+          <img class="monitor-shot" draggable="false" @contextmenu.prevent :src="monitoringImages[monitorIndex]" :alt="'Monitoring – Screenshot ' + (monitorIndex + 1)">
+          <div v-if="monitoringImages.length > 1" class="gallery-controls">
+            <button class="arrow" type="button" aria-label="Vorheriges Bild" @click="monitorIndex = (monitorIndex + monitoringImages.length - 1) % monitoringImages.length">‹</button>
+            <span>{{ monitorIndex + 1 }} / {{ monitoringImages.length }}</span>
+            <button class="arrow" type="button" aria-label="Nächstes Bild" @click="monitorIndex = (monitorIndex + 1) % monitoringImages.length">›</button>
+          </div>
+        </template>
+        <p v-else>Die Screenshots zum Monitoring-Projekt folgen.</p>
+      </div>
+    </dialog>
     <dialog ref="dialog" class="ecocharge-details" id="ecocharge-details" aria-labelledby="ecocharge-title" @close="restoreFocus" @cancel.prevent="closeProject" @click.self="closeProject">
       <header class="dialog-bar"><span>Projekte <b>/</b> EcoCharge</span><button aria-label="Projektansicht schliessen" type="button" autofocus @click="closeProject">×</button></header>
       <div class="screen-list" role="group" aria-label="App-Ansicht auswählen">
@@ -245,7 +273,14 @@ onMounted(() => {
 }
 
 .ecocharge-card { cursor: pointer; }
-.monitoring-card { justify-content: center; }
+.monitoring-card { cursor: pointer; }
+.monitor-cover { background: #15252b; display:grid; place-items:center; }
+.monitor-cover svg { width:72%; fill:none; stroke:#9ddbd0; stroke-width:2; }
+.monitor-cover img,.monitor-shot { width:100%; height:100%; object-fit:contain; }
+.monitor-body { padding:clamp(20px,4vw,42px); }
+.monitor-body h3 { font-size:2rem; margin:0 0 16px; }
+.monitor-shot { display:block; max-height:60vh; }
+.monitor-body .gallery-controls { justify-content:center; margin-top:12px; }
 .monitoring-card .project-content { flex: none; }
 .resource-links { display: flex; flex-wrap: wrap; gap: 16px; margin-block: 18px; }
 .arrow { display:grid; place-items:center; width:36px; height:36px; border-radius:50%; border:1px solid #496052; background:#1c2c24; color:#def2e4; font:22px/1 system-ui; cursor:pointer; }
