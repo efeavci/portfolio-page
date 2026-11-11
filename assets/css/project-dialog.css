@@ -118,8 +118,13 @@ html:has(dialog.project-dialog[open]) { overflow: hidden; }
 @media (hover: none) { .shot-zoom { opacity: 1; } }
 .shot figcaption { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 52px; padding: 8px 2px 0; color: #b9c9bf; font: 12px/1.4 var(--mono); }
 
+.shot figcaption .gallery-controls { flex: none; }
+.gallery-controls span { white-space: nowrap; }
+
 @media (max-width: 800px) {
   .story { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .story-intro .shot { order: -1; }
+  .shot-stage { padding: 6px; }
 }
 
 /* ---------- Lightbox ---------- */
