@@ -26,7 +26,7 @@ import profileImage from "../../assets/images/profile.webp";
           internen Anwendungen und Datenanalyse-Lösungen.
         </p>
         <div class="about-chips">
-          <span>Informatiker EFZ</span><span>BSc Digital Business & AI</span
+          <span>Informatiker EFZ</span><span>BSc Digital Business & AI (laufend)</span
           ><span>DE · EN · FR</span>
         </div>
       </div>

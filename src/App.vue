@@ -105,7 +105,7 @@ onBeforeUnmount(() => {
 
     <section class="stats">
       <div><small>Ausbildung</small><strong>EFZ</strong></div>
-      <div><small>Studium</small><strong>BSc</strong></div>
+      <div><small>Studium · laufend</small><strong>BSc</strong></div>
       <div><small>Technologien</small><strong>20+</strong></div>
       <div><small>IT seit</small><strong>2020</strong></div>
     </section>
