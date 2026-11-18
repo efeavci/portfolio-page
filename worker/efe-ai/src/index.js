@@ -1,6 +1,6 @@
 // Cloudflare Workers AI – kein API-Schlüssel im Browser.
 // Vor dem Deployment ALLOWED_ORIGIN auf die öffentliche Portfolio-Domain setzen.
-const MODEL = "@cf/meta/llama-3.1-8b-instruct";
+const MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
 const KNOWLEDGE = `
 Efe Avci ist Informatiker EFZ, studiert Digital Business & AI (BSc) an der Berner Fachhochschule und arbeitet bei Keystone-SDA ATS AG im IT-Support sowie an internen Anwendungen und Datenanalysen.
 Projekte:
