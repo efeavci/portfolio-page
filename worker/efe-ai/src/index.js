@@ -21,6 +21,7 @@ export default {
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers });
     if (request.method !== "POST") return reply({ error: "Method not allowed" }, 405);
     if (!env.AI) return reply({ error: "AI binding fehlt" }, 503);
+    if (!env.AI_RATE_LIMITER) return reply({ error: "Rate-Limit-Bindung fehlt" }, 503);
     if (Number(request.headers.get("Content-Length") || 0) > 8000) return reply({ error: "Nachricht zu lang" }, 413);
     try {
       const raw = await request.text();
@@ -30,6 +31,10 @@ export default {
       const messages = body.messages.map((m) => ({ role: m.role, content: m.content }));
       if (messages.some(m => !["user", "assistant"].includes(m.role) || typeof m.content !== "string" || !m.content.trim() || m.content.length > 500)) return reply({ error: "Ungültige Nachricht" }, 400);
       if (messages.at(-1).role !== "user") return reply({ error: "Letzte Nachricht muss eine Frage sein" }, 400);
+      // Globales Schutzlimit: bewusst nicht nur nach IP, da IPs geteilt werden können.
+      // Cloudflare-Limits sind pro Standort approximativ, kein hartes Tagesbudget.
+      const { success } = await env.AI_RATE_LIMITER.limit({ key: "efe-ai-global" });
+      if (!success) return reply({ error: "Zu viele Anfragen. Bitte in einer Minute erneut versuchen." }, 429);
       const result = await env.AI.run(MODEL, { messages: [{ role: "system", content: SYSTEM }, ...messages], max_tokens: 350 });
       if (!result?.response) return reply({ error: "Keine Antwort" }, 502);
       return reply({ reply: result.response });
