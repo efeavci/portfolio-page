@@ -6,6 +6,7 @@ import FocusSection from "./components/FocusSection.vue";
 import AboutSection from "./components/AboutSection.vue";
 import SkillsSection from "./components/SkillsSection.vue";
 import JourneySection from "./components/JourneySection.vue";
+import EfeAIChat from "./components/EfeAIChat.vue";
 
 const menuOpen = ref(false);
 const technologies = [
@@ -137,6 +138,8 @@ onBeforeUnmount(() => {
       </div>
     </section>
   </main>
+
+  <EfeAIChat />
 
   <footer>
     <span>© {{ new Date().getFullYear() }} Efe Avci</span>
