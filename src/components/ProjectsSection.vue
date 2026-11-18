@@ -2,6 +2,8 @@
 import { onMounted, ref } from "vue";
 import EcoChargeDialog from "./EcoChargeDialog.vue";
 import MonitoringDialog from "./MonitoringDialog.vue";
+import HotChilliDialog from "./HotChilliDialog.vue";
+import { hotTools } from "../data/hotchilli.js";
 import { ecochargeCover, ecochargeTools } from "../data/ecocharge.js";
 import { monitoringCover, monitorTools } from "../data/monitoring.js";
 
@@ -9,9 +11,12 @@ const ecoDialog = ref(null);
 const ecoTrigger = ref(null);
 const monitorDialog = ref(null);
 const monitorTrigger = ref(null);
+const hotDialog = ref(null);
+const hotTrigger = ref(null);
 
 const openEcoCharge = () => ecoDialog.value.open(ecoTrigger.value);
 const openMonitoring = () => monitorDialog.value.open(monitorTrigger.value);
+const openHotChilli = () => hotDialog.value.open(hotTrigger.value);
 
 // Ein Klick auf die Karte öffnet das Projekt, ausser er trifft einen Link oder Button.
 const fromCard = (event, openFn) => {
@@ -21,6 +26,7 @@ const fromCard = (event, openFn) => {
 onMounted(() => {
   if (location.hash === "#ecocharge-details") openEcoCharge();
   if (location.hash === "#monitoring-details") openMonitoring();
+  if (location.hash === "#hotchilli-details") openHotChilli();
 });
 </script>
 
@@ -79,10 +85,26 @@ onMounted(() => {
           </div>
         </div>
       </article>
+      <article class="project-card" @click="fromCard($event, openHotChilli)">
+        <div class="project-image hotchilli-cover" role="img" aria-label="Hot Chilli Pepper – Restaurant-Website">
+          <div class="hotchilli-brand"><span>RESTAURANT · OSTERMUNDIGEN</span><strong>HOT CHILLI<br/>PEPPER<span>.</span></strong><small>FOOD · FLAVOUR · FIRE</small></div>
+        </div>
+        <div class="project-content">
+          <p class="meta">WEBSITE · GASTRONOMIE</p>
+          <h3>Hot Chilli Pepper</h3>
+          <p>Eine schnelle One-Page-Website für ein Restaurant in Ostermundigen: Angebot, Öffnungszeiten und Route auf einen Blick, Anruf mit einem Klick.</p>
+          <div class="tags"><span v-for="tool in hotTools" :key="tool">{{ tool }}</span></div>
+          <div class="project-actions">
+            <button ref="hotTrigger" class="project-link open-project" type="button" aria-haspopup="dialog" @click="openHotChilli">Projekt ansehen →</button>
+            <a class="project-link" href="https://hotchillipepper.ch/" target="_blank" rel="noopener noreferrer">Live Demo ↗</a>
+          </div>
+        </div>
+      </article>
     </div>
 
     <EcoChargeDialog ref="ecoDialog" />
     <MonitoringDialog ref="monitorDialog" />
+    <HotChilliDialog ref="hotDialog" />
   </section>
 </template>
 
@@ -92,6 +114,12 @@ onMounted(() => {
 .project-image { flex: none; height: auto; aspect-ratio: 16 / 9; }
 .project-image img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .monitor-cover { background: #15252b; }
+.hotchilli-cover { background: radial-gradient(circle at 75% 25%, #58291a 0%, transparent 50%), linear-gradient(135deg, #17100c, #0b0a09); color: #f5efe4; padding: 28px; }
+.hotchilli-brand { display: flex; flex-direction: column; justify-content: center; width: 100%; height: 100%; border: 1px solid rgba(216,181,108,.25); padding: clamp(18px, 4vw, 34px); }
+.hotchilli-brand > span { color: #d8b56c; font-size: 10px; letter-spacing: .2em; }
+.hotchilli-brand strong { margin-top: 20px; font-size: clamp(29px, 3.5vw, 49px); line-height: .98; letter-spacing: -.055em; }
+.hotchilli-brand strong span { color: #c9472f; }
+.hotchilli-brand small { margin-top: 20px; color: #d8b56c; letter-spacing: .22em; font-size: 10px; }
 .project-content { display: flex; flex: 1; flex-direction: column; align-items: flex-start; }
 .project-content .tags { margin-bottom: 18px; }
 .project-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 24px; margin-top: auto; }

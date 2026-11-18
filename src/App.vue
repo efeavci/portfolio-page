@@ -6,6 +6,7 @@ import FocusSection from "./components/FocusSection.vue";
 import AboutSection from "./components/AboutSection.vue";
 import SkillsSection from "./components/SkillsSection.vue";
 import JourneySection from "./components/JourneySection.vue";
+import EfeAIChat from "./components/EfeAIChat.vue";
 
 const menuOpen = ref(false);
 const technologies = [
@@ -105,7 +106,7 @@ onBeforeUnmount(() => {
 
     <section class="stats">
       <div><small>Ausbildung</small><strong>EFZ</strong></div>
-      <div><small>Studium</small><strong>BSc</strong></div>
+      <div><small>Studium · laufend</small><strong>BSc</strong></div>
       <div><small>Technologien</small><strong>20+</strong></div>
       <div><small>IT seit</small><strong>2020</strong></div>
     </section>
@@ -137,6 +138,8 @@ onBeforeUnmount(() => {
       </div>
     </section>
   </main>
+
+  <EfeAIChat />
 
   <footer>
     <span>© {{ new Date().getFullYear() }} Efe Avci</span>

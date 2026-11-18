@@ -3,6 +3,7 @@
     <div class="hero-inner">
       <div class="hero-copy">
         <p class="eyebrow">INFORMATIKER EFZ · DIGITAL BUSINESS & AI</p>
+        <p class="hero-name">Hallo, ich bin Efe Avci.</p>
         <h1>Softwareentwicklung<br /><span>& Systemtechnik.</span></h1>
         <p class="hero-text">
           Ich entwickle digitale Lösungen und beschäftige mich gleichzeitig mit

@@ -7,7 +7,7 @@
     <div class="skill-grid">
       <article>
         <span>01</span>
-        <h3>Development</h3>
+        <h3>Entwicklung</h3>
         <p>
           Python · Django · JavaScript · HTML5 · CSS3 · Bootstrap · jQuery ·
           Chart.js · Vue · Vite
@@ -20,7 +20,7 @@
       </article>
       <article>
         <span>03</span>
-        <h3>Infrastructure</h3>
+        <h3>Infrastruktur</h3>
         <p>
           Windows · Linux · VMware · Hyper-V · Proxmox · Active Directory ·
           Networking
@@ -28,7 +28,7 @@
       </article>
       <article>
         <span>04</span>
-        <h3>Cloud & Automation</h3>
+        <h3>Cloud & Automatisierung</h3>
         <p>Azure · Google Cloud · PowerShell · Bash · CI/CD · Unit Testing</p>
       </article>
     </div>
