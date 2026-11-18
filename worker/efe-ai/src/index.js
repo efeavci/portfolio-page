@@ -35,6 +35,7 @@ export default {
       return reply({ reply: result.response });
     } catch (e) {
       if (e instanceof SyntaxError) return reply({ error: "Ungültiges JSON" }, 400);
+      console.error("Workers AI request failed", { name: e?.name, message: String(e?.message || e), code: e?.code, cause: e?.cause?.message });
       return reply({ error: "KI vorübergehend nicht verfügbar" }, 503);
     }
   }
