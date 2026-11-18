@@ -5,6 +5,7 @@ const open = ref(false);
 const busy = ref(false);
 const question = ref("");
 const log = ref([]);
+const history = ref([]);
 const scroller = ref(null);
 const examples = ["Welche Projekte hat Efe entwickelt?", "Welche Technologien kennt Efe?", "Was ist EcoCharge?"];
 const scroll = async () => { await nextTick(); scroller.value?.scrollTo({ top: scroller.value.scrollHeight, behavior: "smooth" }); };
@@ -19,14 +20,17 @@ async function send(value = question.value) {
     const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: log.value.slice(-10) }),
+      body: JSON.stringify({ messages: [...history.value.slice(-7), { role: "user", content: text }] }),
       signal: AbortSignal.timeout(25000),
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok || typeof data.reply !== "string") throw new Error(data.error || "Der Dienst ist momentan nicht verfügbar.");
     log.value.push({ role: "assistant", content: data.reply });
-  } catch {
-    log.value.push({ role: "assistant", content: "Die KI ist gerade nicht erreichbar. Bitte versuche es später erneut." });
+    history.value.push({ role: "user", content: text }, { role: "assistant", content: data.reply });
+    history.value = history.value.slice(-8);
+  } catch (error) {
+    const message = error?.name === "TimeoutError" ? "Die Antwort dauert zu lange. Bitte versuche es erneut." : "Die KI ist gerade nicht erreichbar. Bitte versuche es später erneut.";
+    log.value.push({ role: "error", content: message });
   } finally { busy.value = false; await scroll(); }
 }
 </script>
@@ -72,6 +76,7 @@ async function send(value = question.value) {
 .efe-ai-msg { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 94%; border-radius: 15px; padding: 11px 14px; font-size: 13px; line-height: 1.55; }
 .efe-ai-msg.assistant { background: #222228; color: #ececf0; }
 .efe-ai-msg.user { align-self: flex-end; background: #175caa; color: white; }
+.efe-ai-msg.error { background: #332326; color: #ffd3d6; }
 .efe-ai-examples { display: grid; gap: 8px; width: 100%; }
 .efe-ai-examples button { text-align: left; border: 1px solid #343c4b; border-radius: 12px; padding: 10px; background: #161d28; color: #b5d7ff; cursor: pointer; font-size: 12px; }
 .efe-ai-notice { color: #d7b67b; font-size: 12px; }
